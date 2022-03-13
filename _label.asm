@@ -28,9 +28,14 @@ KEYB: {
 }
 
 SPRITES: {
-// Level x ranger
-  .label RANGER_STANDING    = $50
-  .label RANGER_FINING      = $59
+// Dalek
+  .label DALEK_RIGHT     = $50
+  .label DALEK_LEFT      = $51
+  .label DALEK_UP        = $52
+  .label DALEK_DOWN      = $53
+
+// Player
+  .label PLAYER     = $54
 
 // Level 1 woodcutter and hatchet
   .label ENEMY_STANDING     = $5a

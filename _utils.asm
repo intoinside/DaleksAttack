@@ -10,6 +10,50 @@
 
 #importonce
 
+SpriteNumberMask:
+    .byte %00000001, %00000010, %00000100, %00001000, %00010000, %00100000, %01000000, %10000000
+
+.macro EnableSprite(bSprite, bEnable) {
+    ldy #bSprite
+    lda SpriteNumberMask, y
+    .if (bEnable)   // Build-time condition (not run-time)
+    {
+      ora c64lib.SPRITE_ENABLE   // Merge with the current sprite enable register
+    }
+    else
+    {
+      eor #$ff    // Get mask compliment
+      and c64lib.SPRITE_ENABLE   // Merge with the current sprite enable register
+    }
+    sta c64lib.SPRITE_ENABLE       // Set the new value into the sprite enable register
+}
+.assert "EnableSprite($00, true) ", { EnableSprite($be, true) }, {
+  ldy #$be; lda SpriteNumberMask, y; ora $d015; sta $d015
+}
+.assert "EnableSprite($00, false) ", { EnableSprite($be, false) }, {
+  ldy #$be; lda SpriteNumberMask, y; eor #$ff; and $d015; sta $d015
+}
+
+.macro EnableMultiSprite(SpriteMask, bEnable) {
+    lda #SpriteMask
+    .if (bEnable)   // Build-time condition (not run-time)
+    {
+      ora c64lib.SPRITE_ENABLE   // Merge with the current sprite enable register
+    }
+    else
+    {
+      eor #$ff    // Get mask compliment
+      and c64lib.SPRITE_ENABLE   // Merge with the current sprite enable register
+    }
+    sta c64lib.SPRITE_ENABLE       // Set the new value into the sprite enable register
+}
+.assert "EnableMultiSprite($be, true) ", { EnableMultiSprite($be, true) }, {
+  lda #$be; ora $d015; sta $d015
+}
+.assert "EnableMultiSprite($00, false) ", { EnableMultiSprite($be, false) }, {
+  lda #$be; eor #$ff; and $d015; sta $d015
+}
+
 * = * "Utils SetColorToChars"
 SetColorToChars: {
     lda ScreenMemoryAddress
@@ -58,3 +102,5 @@ SetColorToChars: {
 }
 
 #import "_allimport.asm"
+
+#import "chipset/lib/vic2.asm"
