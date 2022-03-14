@@ -3,7 +3,7 @@ bak/*
 bin/*
 build/*
 gradle/*
-maps/*.bin
+assets/*.bin
 .ra/*
 .gradle/*
 .source.txt
