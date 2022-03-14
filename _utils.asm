@@ -13,6 +13,34 @@
 SpriteNumberMask:
     .byte %00000001, %00000010, %00000100, %00001000, %00010000, %00100000, %01000000, %10000000
 
+.macro GetRandomUpTo(maxNumber) {
+    lda #maxNumber
+    sta GetRandom.GeneratorMax
+    jsr GetRandom
+}
+
+GetRandom: {
+  Loop:
+    lda $d012
+    eor $dc04
+    sbc $dc05
+    cmp GeneratorMax
+    bcs Loop
+    rts
+
+    GeneratorMax: .byte $00
+}
+
+WaitRoutine: {
+  VBLANKWAITLOW:
+    lda $d011
+    bpl VBLANKWAITLOW
+  VBLANKWAITHIGH:
+    lda $d011
+    bmi VBLANKWAITHIGH
+    rts
+}
+
 .macro EnableSprite(bSprite, bEnable) {
     ldy #bSprite
     lda SpriteNumberMask, y
