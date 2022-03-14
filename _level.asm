@@ -23,6 +23,7 @@ Manager: {
     jsr Joystick.GetJoystickMove
 
     jsr Player.HandlePlayerMove
+    jsr Dalek.HandleDalekMove
 
     lda GameEnded
     beq JoystickMovement
@@ -145,5 +146,6 @@ TimedRoutine10th: {
 #import "_utils.asm"
 #import "_joystick.asm"
 #import "_player.asm"
+#import "_dalek.asm"
 
 #import "chipset/lib/vic2.asm"
