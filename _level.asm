@@ -13,9 +13,19 @@
 .filenamespace Level
 
 // Manager of level
-* = * "Level1 Manager"
+* = * "Level Manager"
 Manager: {
     jsr Init
+
+  JoystickMovement:
+    jsr WaitRoutine
+    jsr TimedRoutine
+    jsr Joystick.GetJoystickMove
+
+    jsr Player.HandlePlayerMove
+
+    lda GameEnded
+    beq JoystickMovement
 
     rts
 }
@@ -83,11 +93,57 @@ AddColorToMap: {
     jmp SetColorToChars
 }
 
+* = * "Level TimedRoutine"
+TimedRoutine: {
+    jsr TimedRoutine10th
+
+    lda DelayCounter
+    beq DelayTriggered        // when counter is zero stop decrementing
+    dec DelayCounter          // decrement the counter
+
+    jmp Exit
+
+  DelayTriggered:
+    lda DelayRequested        // delay reached 0, reset it
+    sta DelayCounter
+
+  Waiting:
+    // jsr AddEnemy
+
+    jmp Exit
+
+  Exit:
+    rts
+
+  DelayCounter: .byte 50      // Counter storage
+  DelayRequested: .byte 50    // 1 second delay
+}
+
+TimedRoutine10th: {
+    lda DelayCounter
+    beq DelayTriggered        // when counter is zero stop decrementing
+    dec DelayCounter          // decrement the counter
+
+    jmp Exit
+
+  DelayTriggered:
+    lda DelayRequested        // delay reached 0, reset it
+    sta DelayCounter
+
+  Exit:
+    rts
+
+  DelayCounter: .byte 8       // Counter storage
+  DelayRequested: .byte 8     // 8/50 second delay
+}
+
 .label ScreenMemoryBaseAddress = $4400
 
 .label SPRITE_0     = ScreenMemoryBaseAddress + $3f8
 .label SPRITE_1     = ScreenMemoryBaseAddress + $3f9
 
 #import "_utils.asm"
+#import "_joystick.asm"
+#import "_player.asm"
 
 #import "chipset/lib/vic2.asm"
