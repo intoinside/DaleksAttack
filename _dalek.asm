@@ -14,6 +14,12 @@
 
 * = * "Player HandleDalekMove"
 HandleDalekMove: {
+    dec DalekSpeedDummy
+    bne Done
+
+    lda DalekSpeed
+    sta DalekSpeedDummy
+    
     lda c64lib.SPRITE_0_X
     cmp c64lib.SPRITE_1_X
     beq CheckVertical
@@ -45,6 +51,9 @@ HandleDalekMove: {
 
   Done:
     rts
+
+  DalekSpeedDummy:  .byte 8
+  DalekSpeed:       .byte 8
 }
 
 #import "chipset/lib/vic2.asm"
