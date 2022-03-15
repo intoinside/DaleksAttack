@@ -23,7 +23,9 @@ Manager: {
     jsr Joystick.GetJoystickMove
 
     jsr Player.HandlePlayerMove
-    jsr Dalek.HandleDalekMove
+    HandleDalekMove(1)
+    HandleDalekMove(2)
+    HandleDalekMove(3)
 
     lda GameEnded
     beq JoystickMovement
@@ -38,8 +40,9 @@ Init: {
     // jsr SetSpriteToForeground
 // Set background and border color to brown
     lda #GRAY
-    sta c64lib.BORDER_COL
     sta c64lib.BG_COL_0
+    lda #LIGHT_GRAY
+    sta c64lib.BORDER_COL
 
     lda #ORANGE
     sta c64lib.BG_COL_1
@@ -67,22 +70,53 @@ Init: {
 // Dalek sprite setting
     lda #YELLOW
     sta c64lib.SPRITE_1_COLOR
+    sta c64lib.SPRITE_2_COLOR
+    sta c64lib.SPRITE_3_COLOR
+    sta c64lib.SPRITE_4_COLOR
+    sta c64lib.SPRITE_5_COLOR
 
     lda #SPRITES.DALEK_RIGHT
     sta SPRITE_1
+    sta SPRITE_2
+    sta SPRITE_3
+    sta SPRITE_4
+    sta SPRITE_5
 
-// TODO: Start position should be random
-    lda #$60
+// Player position
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
     sta c64lib.SPRITE_0_X
-    lda #$60
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
     sta c64lib.SPRITE_0_Y
-    lda #$40
-    sta c64lib.SPRITE_1_X
-    lda #$40
-    sta c64lib.SPRITE_1_Y
 
-    EnableSprite(0, true)
-    EnableSprite(1, true)
+// Dalek position
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_1_X
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_2_X
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_3_X
+    /*
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_4_X
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_5_X
+    */
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_1_Y
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_2_Y
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_3_Y
+    /*
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_4_Y
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_5_Y
+    */
+
+    lda #%00001111
+    sta c64lib.SPRITE_ENABLE
+    sta c64lib.SPRITE_COL_MODE
 
     jmp AddColorToMap   // jsr + rts
 }
@@ -138,10 +172,16 @@ TimedRoutine10th: {
   DelayRequested: .byte 8     // 8/50 second delay
 }
 
+CurrentLevel: .byte 1
+
 .label ScreenMemoryBaseAddress = $4400
 
 .label SPRITE_0     = ScreenMemoryBaseAddress + $3f8
 .label SPRITE_1     = ScreenMemoryBaseAddress + $3f9
+.label SPRITE_2     = ScreenMemoryBaseAddress + $3fa
+.label SPRITE_3     = ScreenMemoryBaseAddress + $3fb
+.label SPRITE_4     = ScreenMemoryBaseAddress + $3fc
+.label SPRITE_5     = ScreenMemoryBaseAddress + $3fd
 
 #import "_utils.asm"
 #import "_joystick.asm"

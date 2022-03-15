@@ -13,7 +13,14 @@
 SpriteNumberMask:
     .byte %00000001, %00000010, %00000100, %00001000, %00010000, %00100000, %01000000, %10000000
 
-.macro GetRandomUpTo(maxNumber) {
+.label LIMIT_UP     = 46
+.label LIMIT_DOWN   = 228
+.label LIMIT_LEFT   = 22
+.label LIMIT_RIGHT  = 228
+
+.macro GetRandomNumberInRange(minNumber, maxNumber) {
+    lda #minNumber
+    sta GetRandom.GeneratorMin
     lda #maxNumber
     sta GetRandom.GeneratorMax
     jsr GetRandom
@@ -26,8 +33,11 @@ GetRandom: {
     sbc $dc05
     cmp GeneratorMax
     bcs Loop
+    cmp GeneratorMin
+    bcc Loop
     rts
 
+    GeneratorMin: .byte $00
     GeneratorMax: .byte $00
 }
 

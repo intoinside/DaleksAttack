@@ -61,11 +61,7 @@ HandlePlayerMove: {
     rts
 }
 
-.label LIMIT_UP     = 46
-.label LIMIT_DOWN   = 228
-.label LIMIT_LEFT   = 22
-.label LIMIT_RIGHT  = 228
-
+#import "_utils.asm"
 #import "_joystick.asm"
 
 #import "chipset/lib/vic2.asm"
