@@ -46,17 +46,34 @@ HandleDalekMove: {
   CheckVertical:
     lda c64lib.SPRITE_0_Y
     cmp c64lib.SPRITE_0_Y, x
-    beq Done
+    beq CheckCollision
 
 // Dalek-y and player-y are different, trying to getting closer
     bcc MoveUp
 
   MoveDown:
     inc c64lib.SPRITE_0_Y, x
-    jmp Done
+    jmp CheckCollision
 
   MoveUp:
     dec c64lib.SPRITE_0_Y, x
+
+  CheckCollision:
+    lda c64lib.SPRITE_0_X
+    sta SpriteCollision.SpriteX1
+    lda c64lib.SPRITE_0_Y
+    sta SpriteCollision.SpriteY1
+
+    lda c64lib.SPRITE_0_X, x
+    sta SpriteCollision.OtherX
+    lda c64lib.SPRITE_0_Y, x
+    sta SpriteCollision.OtherY
+
+    jsr SpriteCollision
+
+    beq Done
+
+    sta GameEnded
 
   Done:
     rts
@@ -71,6 +88,7 @@ HandleDalekMove: {
   DalekSpeed:       .byte 8
 }
 
+* = * "Dalek DeterminePosition"
 DeterminePosition: {
   Loop:
     GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
