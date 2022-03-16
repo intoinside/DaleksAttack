@@ -30,6 +30,8 @@ Manager: {
     lda GameEnded
     beq JoystickMovement
 
+  !:
+    jmp !-
     rts
 }
 
@@ -44,9 +46,9 @@ Init: {
     lda #LIGHT_GRAY
     sta c64lib.BORDER_COL
 
-    lda #ORANGE
-    sta c64lib.BG_COL_1
     lda #BLACK
+    sta c64lib.BG_COL_1
+    lda #WHITE
     sta c64lib.BG_COL_2
 
 // Setting sprite multi-color
