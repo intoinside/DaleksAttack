@@ -89,30 +89,7 @@ Init: {
     sta c64lib.SPRITE_0_Y
 
 // Dalek position
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_1_X
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_2_X
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_3_X
-    /*
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_4_X
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_5_X
-    */
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
-    sta c64lib.SPRITE_1_Y
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
-    sta c64lib.SPRITE_2_Y
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
-    sta c64lib.SPRITE_3_Y
-    /*
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
-    sta c64lib.SPRITE_4_Y
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
-    sta c64lib.SPRITE_5_Y
-    */
+    jsr Dalek.DeterminePosition
 
     lda #%00001111
     sta c64lib.SPRITE_ENABLE

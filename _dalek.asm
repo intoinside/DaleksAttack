@@ -71,4 +71,39 @@ HandleDalekMove: {
   DalekSpeed:       .byte 8
 }
 
+DeterminePosition: {
+  Loop:
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_1_X
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_2_X
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_3_X
+    /*
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_4_X
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_5_X
+    */
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_1_Y
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_2_Y
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_3_Y
+    /*
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_4_Y
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_5_Y
+    */
+
+    lda c64lib.SPRITE_2S_COLLISION
+    bne Loop
+
+    rts
+}
+
+#import "_utils.asm"
+
 #import "chipset/lib/vic2.asm"
