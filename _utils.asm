@@ -13,7 +13,7 @@
 SpriteNumberMask:
     .byte %00000001, %00000010, %00000100, %00001000, %00010000, %00100000, %01000000, %10000000
 
-.label LIMIT_UP     = 46
+.label LIMIT_UP     = 48
 .label LIMIT_DOWN   = 228
 .label LIMIT_LEFT   = 22
 .label LIMIT_RIGHT  = 228
