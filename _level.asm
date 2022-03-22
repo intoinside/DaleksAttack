@@ -23,9 +23,9 @@ Manager: {
     jsr Joystick.GetJoystickMove
 
     jsr Player.HandlePlayerMove
-    HandleDalekMove(1)
-    HandleDalekMove(2)
-    HandleDalekMove(3)
+    HandleDalekMove(%00000010, 1)
+    HandleDalekMove(%00000100, 2)
+    HandleDalekMove(%00001000, 3)
 
     lda GameEnded
     beq JoystickMovement
@@ -83,6 +83,8 @@ Init: {
     sta SPRITE_3
     sta SPRITE_4
     sta SPRITE_5
+
+    jsr Dalek.Init
 
 // Player position
     GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
@@ -155,12 +157,14 @@ CurrentLevel: .byte 1
 
 .label ScreenMemoryBaseAddress = $4400
 
-.label SPRITE_0     = ScreenMemoryBaseAddress + $3f8
-.label SPRITE_1     = ScreenMemoryBaseAddress + $3f9
-.label SPRITE_2     = ScreenMemoryBaseAddress + $3fa
-.label SPRITE_3     = ScreenMemoryBaseAddress + $3fb
-.label SPRITE_4     = ScreenMemoryBaseAddress + $3fc
-.label SPRITE_5     = ScreenMemoryBaseAddress + $3fd
+.label FirstSpritePointer = ScreenMemoryBaseAddress + $3f8
+
+.label SPRITE_0     = FirstSpritePointer
+.label SPRITE_1     = FirstSpritePointer + 1
+.label SPRITE_2     = FirstSpritePointer + 2
+.label SPRITE_3     = FirstSpritePointer + 3
+.label SPRITE_4     = FirstSpritePointer + 4
+.label SPRITE_5     = FirstSpritePointer + 5
 
 #import "_utils.asm"
 #import "_joystick.asm"
