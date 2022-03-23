@@ -95,6 +95,88 @@ SpriteCollision: {
   OtherY: .byte $00
 }
 
+.macro ShowDialogNextLevel(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogNextLevel
+    sta ShowDialog.DialogAddress
+    lda #>DialogNextLevel
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
+.macro ShowDialogGameOver(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogGameOver
+    sta ShowDialog.DialogAddress
+    lda #>DialogGameOver
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
+ShowDialog: {
+    lda StartAddress + 1
+    sta StartAddressHi
+
+    c64lib_add16(c64lib_getTextOffset(DialogStartX, DialogStartY), StartAddress)
+
+    ldy #DialogHeight
+  !Row:
+    dey
+
+    lda DialogAddress
+    sta DialogAddressPtr + 1
+    lda DialogAddress + 1
+    sta DialogAddressPtr + 2
+
+    lda StartAddress
+    sta StartAddressPtr + 1
+    lda StartAddress + 1
+    sta StartAddressPtr + 2
+
+    ldx #DialogWidth
+
+  !:
+    dex
+  DialogAddressPtr:
+    lda DialogAddress, x
+  StartAddressPtr:
+    sta StartAddress, x
+    cpx #0
+    bne !-
+
+    c64lib_add16(40, StartAddress)
+    c64lib_add16(DialogWidth, DialogAddress)
+
+    cpy #0
+    bne !Row-
+
+    lda StartAddressHi
+    sta SetColorToChars.ScreenMemoryAddress
+
+    jsr SetColorToChars
+
+    inc IsShown
+    rts
+
+  .label DialogStartX = 10;
+  .label DialogStartY = 6;
+
+  .label DialogWidth = 20;
+  .label DialogHeight = 7;
+
+  IsShown: .byte $00
+
+  StartAddress: .word $beef
+  DialogAddress: .word $beef
+  StartAddressHi: .byte $be
+}
+
 .macro GetRandomNumberInRange(minNumber, maxNumber) {
     lda #minNumber
     sta GetRandom.GeneratorMin

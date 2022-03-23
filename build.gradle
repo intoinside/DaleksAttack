@@ -48,6 +48,28 @@ preprocess {
                 interleaver {
                 }
             }
+            map {
+                left = 40
+                top = 0
+                right = 50
+                bottom = 12
+                interleaver {
+                    output = file("assets/nextlevel.bin")
+                }
+                interleaver {
+                }
+            }
+            map {
+                left = 50
+                top = 0
+                right = 60
+                bottom = 12
+                interleaver {
+                    output = file("assets/gameover.bin")
+                }
+                interleaver {
+                }
+            }
         }
     }
 }
