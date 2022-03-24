@@ -37,7 +37,7 @@ Manager: {
 
 * = * "Level Init"
 Init: {
-    // CopyScreenRam(ScreenMemoryBaseAddress, MapDummyArea)
+    CopyScreenRam(ScreenMemoryBaseAddress, MapDummyArea)
 
     // jsr SetSpriteToForeground
 // Set background and border color to brown
@@ -84,7 +84,7 @@ Init: {
     sta SPRITE_4
     sta SPRITE_5
 
-    jsr Dalek.Init
+    Init(3)
 
 // Player position
     GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)

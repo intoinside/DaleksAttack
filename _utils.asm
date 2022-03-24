@@ -95,6 +95,22 @@ SpriteCollision: {
   OtherY: .byte $00
 }
 
+.macro CopyScreenRam(StartAddress, EndAddress) {
+    ldx #250
+  !:
+    dex
+    lda StartAddress, x
+    sta EndAddress, x
+    lda StartAddress + 250, x
+    sta EndAddress + 250, x
+    lda StartAddress + 500, x
+    sta EndAddress + 500, x
+    lda StartAddress + 750, x
+    sta EndAddress + 750, x
+    cpx #$0
+    bne !-
+}
+
 .macro ShowDialogNextLevel(ScreenMemoryBaseAddress) {
     lda #<ScreenMemoryBaseAddress
     sta ShowDialog.StartAddress
@@ -158,17 +174,16 @@ ShowDialog: {
 
     lda StartAddressHi
     sta SetColorToChars.ScreenMemoryAddress
-
     jsr SetColorToChars
 
     inc IsShown
     rts
 
   .label DialogStartX = 10;
-  .label DialogStartY = 6;
+  .label DialogStartY = 5;
 
-  .label DialogWidth = 20;
-  .label DialogHeight = 7;
+  .label DialogWidth = 10;
+  .label DialogHeight = 11;
 
   IsShown: .byte $00
 
@@ -301,4 +316,5 @@ SetColorToChars: {
 #import "_allimport.asm"
 
 #import "chipset/lib/vic2.asm"
+#import "chipset/lib/vic2-global.asm"
 #import "common/lib/math-global.asm"

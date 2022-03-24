@@ -10,6 +10,12 @@
 
 #importonce
 
+.macro Init(dalekCount) {
+    lda #dalekCount
+    sta Dalek.DalekCount
+    jsr Dalek.Init
+}
+
 // Update requested Dalek movement, getting toward player
 .macro HandleDalekMove(dalekBitMask, dalekIndex) {
     lda #dalekBitMask
@@ -36,13 +42,13 @@ HandleDalekMove: {
 
 // Check if current dalek is dead (and exploded)
     lda DalekToMoveBitMask
-    and DalekDead
+    and DeadBitmask
 // If is dead, exit
     bne Done
 
 // Check if current dalek is exploding
     lda DalekToMoveBitMask
-    and DalekExploding
+    and ExplodingBitmask
 // If it's not exploding, go to collision check
     beq CheckCollision
 // If it's exploding, go to animation and then exit
@@ -115,11 +121,6 @@ HandleDalekMove: {
   Done:
     rts
 
-// Dalek bitmask alive status, each bit is a dalek (1 means exploded and dead)
-  DalekDead:        .byte 0
-
-// Dalek bitmask exploding status, each bit is a dalek (1 means exploding)
-  DalekExploding:   .byte 0
 
 // Currently moving sprint (bit set)
   DalekToMoveBitMask: .byte 0
@@ -134,7 +135,7 @@ HandleDalekMove: {
   DalekSpeedDummy:  .byte 8, 8, 8, 8, 8
 
 // Dalek speed
-  DalekSpeed:       .byte 6
+  DalekSpeed:       .byte 8
 }
 
 // Manage current dalek explosion
@@ -151,11 +152,18 @@ AnimateExploding: {
 
 // Explosion frame done, set debris sprite
     lda HandleDalekMove.DalekToMoveBitMask
-    ora HandleDalekMove.DalekDead
-    sta HandleDalekMove.DalekDead
+    ora DeadBitmask
+    sta DeadBitmask
 
     lda #SPRITES.DalekDebris
     sta Level.FirstSpritePointer, x
+
+    lda ExplodedCount
+    cmp DalekCount
+    bcc Done
+
+    // All dalek are dead, show next level dialog
+    ShowDialogNextLevel(Level.ScreenMemoryBaseAddress)
 
     jmp Done
   !:
@@ -169,12 +177,14 @@ AnimateExploding: {
 * = * "Dalek Explode"
 Explode: {
     and HandleDalekMove.DalekToMoveBitMask
-    ora HandleDalekMove.DalekExploding
-    sta HandleDalekMove.DalekExploding
+    ora ExplodingBitmask
+    sta ExplodingBitmask
 
     ldy HandleDalekMove.DalekIndex
     lda #SPRITES.DalekExplosion1
     sta Level.FirstSpritePointer, y
+
+    inc ExplodedCount
 
     rts
 }
@@ -182,8 +192,9 @@ Explode: {
 * = * "Dalek Init"
 Init: {
     lda #0
-    sta HandleDalekMove.DalekDead
-    sta HandleDalekMove.DalekExploding   
+    sta DeadBitmask
+    sta ExplodingBitmask  
+    sta ExplodedCount 
 
     rts
 }
@@ -221,6 +232,18 @@ DeterminePosition: {
 
     rts
 }
+
+// How many dalek are created on this level
+DalekCount: .byte 0
+
+// How many dalek are exploded
+ExplodedCount: .byte 0
+
+// Dalek bitmask alive status, each bit is a dalek (1 means exploded and dead)
+DeadBitmask:        .byte 0
+
+// Dalek bitmask exploding status, each bit is a dalek (1 means exploding)
+ExplodingBitmask:   .byte 0
 
 #import "_level.asm"
 #import "_utils.asm"

@@ -60,10 +60,10 @@ preprocess {
                 }
             }
             map {
-                left = 50
-                top = 0
-                right = 60
-                bottom = 12
+                left = 40
+                top = 12
+                right = 50
+                bottom = 24
                 interleaver {
                     output = file("assets/gameover.bin")
                 }
