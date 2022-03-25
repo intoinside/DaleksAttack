@@ -95,6 +95,105 @@ SpriteCollision: {
   OtherY: .byte $00
 }
 
+// Create a screen memory backup from StartAddress to EndAddress
+.macro CopyScreenRam(StartAddress, EndAddress) {
+    ldx #250
+  !:
+    dex
+    lda StartAddress, x
+    sta EndAddress, x
+    lda StartAddress + 250, x
+    sta EndAddress + 250, x
+    lda StartAddress + 500, x
+    sta EndAddress + 500, x
+    lda StartAddress + 750, x
+    sta EndAddress + 750, x
+    cpx #$0
+    bne !-
+}
+
+.macro ShowDialogNextLevel(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogNextLevel
+    sta ShowDialog.DialogAddress
+    lda #>DialogNextLevel
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
+.macro ShowDialogGameOver(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogGameOver
+    sta ShowDialog.DialogAddress
+    lda #>DialogGameOver
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
+* = * "Utils ShowDialog"
+ShowDialog: {
+    lda StartAddress + 1
+    sta StartAddressHi
+
+    c64lib_add16(c64lib_getTextOffset(DialogStartX, DialogStartY), StartAddress)
+
+    ldy #DialogHeight
+  !Row:
+    dey
+
+    lda DialogAddress
+    sta DialogAddressPtr + 1
+    lda DialogAddress + 1
+    sta DialogAddressPtr + 2
+
+    lda StartAddress
+    sta StartAddressPtr + 1
+    lda StartAddress + 1
+    sta StartAddressPtr + 2
+
+    ldx #DialogWidth
+
+  !:
+    dex
+  DialogAddressPtr:
+    lda DialogAddress, x
+  StartAddressPtr:
+    sta StartAddress, x
+    cpx #0
+    bne !-
+
+    c64lib_add16(40, StartAddress)
+    c64lib_add16(DialogWidth, DialogAddress)
+
+    cpy #0
+    bne !Row-
+
+    lda StartAddressHi
+    sta SetColorToChars.ScreenMemoryAddress
+    jsr SetColorToChars
+
+    inc IsShown
+    rts
+
+  .label DialogStartX = 10;
+  .label DialogStartY = 5;
+
+  .label DialogWidth = 10;
+  .label DialogHeight = 11;
+
+  IsShown: .byte $00
+
+  StartAddress: .word $beef
+  DialogAddress: .word $beef
+  StartAddressHi: .byte $be
+}
+
 .macro GetRandomNumberInRange(minNumber, maxNumber) {
     lda #minNumber
     sta GetRandom.GeneratorMin
@@ -103,6 +202,7 @@ SpriteCollision: {
     jsr GetRandom
 }
 
+* = * "Utils GetRandom"
 GetRandom: {
   Loop:
     lda $d012
@@ -219,4 +319,5 @@ SetColorToChars: {
 #import "_allimport.asm"
 
 #import "chipset/lib/vic2.asm"
+#import "chipset/lib/vic2-global.asm"
 #import "common/lib/math-global.asm"
