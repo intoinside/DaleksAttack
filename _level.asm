@@ -17,6 +17,9 @@
 Manager: {
     jsr Init
 
+  StartLevel:
+    jsr LevelInit
+
   JoystickMovement:
     jsr WaitRoutine
     jsr TimedRoutine
@@ -26,12 +29,18 @@ Manager: {
     HandleDalekMove(%00000010, 1)
     HandleDalekMove(%00000100, 2)
     HandleDalekMove(%00001000, 3)
+    HandleDalekMove(%00010000, 4)
+    HandleDalekMove(%00100000, 5)
+    HandleDalekMove(%01000000, 6)
 
     SaveDalekCollisionDetection()
 
 // Check if level completed
     lda Level.LevelCompleted
-    bne HandleLevelCompleted
+    beq CheckEndGame
+
+    lda #$ff
+    sta c64lib.SPRITE_PRIORITY
 
 // Level completed, dialog shown, wait for Return keypress
   HandleLevelCompleted:
@@ -41,9 +50,11 @@ Manager: {
     jsr SetupNextLevel
 
 // Check if game ended
-  !:
+  CheckEndGame:
     lda GameEnded
-    beq JoystickMovement
+    bne !+
+    
+    jmp JoystickMovement
 
 // Game ended, handle it better!
   !:
@@ -93,6 +104,7 @@ Init: {
     sta c64lib.SPRITE_3_COLOR
     sta c64lib.SPRITE_4_COLOR
     sta c64lib.SPRITE_5_COLOR
+    sta c64lib.SPRITE_6_COLOR
 
     lda #SPRITES.DALEK_RIGHT
     sta SPRITE_1
@@ -100,8 +112,36 @@ Init: {
     sta SPRITE_3
     sta SPRITE_4
     sta SPRITE_5
+    sta SPRITE_6
 
-    Init(3)
+// Reset all-dalek coordinates
+    lda #0
+    sta c64lib.SPRITE_1_X
+    sta c64lib.SPRITE_2_X
+    sta c64lib.SPRITE_3_X
+    sta c64lib.SPRITE_4_X
+    sta c64lib.SPRITE_5_X
+    sta c64lib.SPRITE_6_X
+    sta c64lib.SPRITE_1_Y
+    sta c64lib.SPRITE_2_Y
+    sta c64lib.SPRITE_3_Y
+    sta c64lib.SPRITE_4_Y
+    sta c64lib.SPRITE_5_Y
+    sta c64lib.SPRITE_6_Y
+
+    lda #0
+    sta c64lib.SPRITE_PRIORITY
+
+    jmp AddColorToMap   // jsr + rts
+}
+
+* = * "Level LevelInit"
+LevelInit: {
+    jsr GetSpriteMaskForLevel
+    sta c64lib.SPRITE_ENABLE
+    sta c64lib.SPRITE_COL_MODE
+
+    DalekInit()
 
 // Player position
     GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
@@ -112,11 +152,21 @@ Init: {
 // Dalek position
     jsr Dalek.DeterminePosition
 
-    lda #%00001111
-    sta c64lib.SPRITE_ENABLE
-    sta c64lib.SPRITE_COL_MODE
+    rts
+}
 
-    jmp AddColorToMap   // jsr + rts
+GetSpriteMaskForLevel: {
+    ldx Level.CurrentLevel
+    dex
+    cpx #4
+    bcc !+
+    ldx #4
+  !:
+    lda SpriteForLevelMask, x
+
+    rts
+
+  SpriteForLevelMask: .byte %00001111, %00011111, %00111111, %01111111
 }
 
 * = * "Level SetupNextLevel"
@@ -196,6 +246,7 @@ LevelCompleted: .byte 0
 .label SPRITE_3     = FirstSpritePointer + 3
 .label SPRITE_4     = FirstSpritePointer + 4
 .label SPRITE_5     = FirstSpritePointer + 5
+.label SPRITE_6     = FirstSpritePointer + 6
 
 #import "_utils.asm"
 #import "_joystick.asm"
