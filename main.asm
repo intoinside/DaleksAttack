@@ -80,7 +80,7 @@ GamePlay: {
     lda #$ff
     sta c64lib.SPRITE_COL_MODE
 
-    // jsr Keyboard.Init
+    jsr Keyboard.Init
 }
 
 GameEnded:          // $00 - Game in progress

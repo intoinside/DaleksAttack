@@ -11,21 +11,35 @@
 #importonce
 
 // Initialize dalek for new level
-.macro Init(dalekCount) {
-    lda #dalekCount
-    sta Dalek.DalekCount
+.macro DalekInit() {
+    ldx Level.CurrentLevel
+    inx
+    inx
+    cpx #7    
+    bcc !+  // Too much dalek, reset to 6
+    ldx #6
+  !:
+    stx Dalek.DalekCount
+
     jsr Dalek.Init
 }
 
 // Update requested Dalek movement, getting toward player
 .macro HandleDalekMove(dalekBitMask, dalekIndex) {
-    lda #dalekBitMask
-    sta Dalek.HandleDalekMove.DalekToMoveBitMask
+    ldx Level.CurrentLevel
+    inx
+    inx
+    cpx #dalekIndex 
+    bcc !+
+
     lda #dalekIndex
     sta Dalek.HandleDalekMove.DalekIndex
-    lda #(dalekIndex * 2)
+    asl
     sta Dalek.HandleDalekMove.DalekCoordinatePointer
+    lda #dalekBitMask
+    sta Dalek.HandleDalekMove.DalekToMoveBitMask
     jsr Dalek.HandleDalekMove
+  !:
 }
 
 .macro SaveDalekCollisionDetection() {
@@ -138,7 +152,7 @@ HandleDalekMove: {
   DalekCoordinatePointer:      .byte 0
 
 // Iterator for Dalek speed
-  DalekSpeedDummy:  .byte 8, 8, 8, 8, 8
+  DalekSpeedDummy:  .byte 8, 8, 8, 8, 8, 8
 
 // Dalek speed
   DalekSpeed:       .byte 8
@@ -168,10 +182,6 @@ AnimateExploding: {
     lda ExplodedCount
     cmp DalekCount
     bcc Done
-
-// All dalek are exploded
-    lda #$ff
-    sta c64lib.SPRITE_PRIORITY
 
     // All dalek are dead, show next level dialog
     ShowDialogNextLevel(Level.ScreenMemoryBaseAddress)
@@ -206,8 +216,6 @@ Explode: {
 Init: {
     lda #0
 
-    sta c64lib.SPRITE_PRIORITY
-
     sta DeadBitmask
     sta ExplodingBitmask  
     sta ExplodedCount 
@@ -217,35 +225,62 @@ Init: {
 
 * = * "Dalek DeterminePosition"
 DeterminePosition: {
+    lda c64lib.SPRITE_2S_COLLISION
+
+    ldx Level.CurrentLevel
+
   Loop:
+// Calculate position for dalek 1,2,3 (they are always visible)
     GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
     sta c64lib.SPRITE_1_X
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    jsr GetRandom
     sta c64lib.SPRITE_2_X
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    jsr GetRandom
     sta c64lib.SPRITE_3_X
-    /*
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_4_X
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
-    sta c64lib.SPRITE_5_X
-    */
+
     GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
     sta c64lib.SPRITE_1_Y
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    jsr GetRandom
     sta c64lib.SPRITE_2_Y
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    jsr GetRandom
     sta c64lib.SPRITE_3_Y
-    /*
+
+// If level 2 or higher, draw dalek 4
+    cpx #2
+    bcc CheckPosition
+
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_4_X
     GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
     sta c64lib.SPRITE_4_Y
+
+// If level 3 or higher, draw dalek 5
+    cpx #3
+    bcc CheckPosition
+
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_5_X
     GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
     sta c64lib.SPRITE_5_Y
-    */
 
+// If level 4 or higher, draw dalek 6
+    cpx #4
+    bcc CheckPosition
+
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_6_X
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_6_Y
+
+* = * "Dalek DeterminePosition CheckPosition"
+  CheckPosition:
+// If a collision is detected, restart from beginning
     lda c64lib.SPRITE_2S_COLLISION
-    bne Loop
+    beq Done
+    
+    jmp Loop
 
+  Done:
     rts
 }
 
