@@ -15,8 +15,10 @@
   .import binary "./assets/mainmap.bin"
 * = $4400 "MainMap"
   .import binary "./assets/mainmap.bin"
+* = $4800 "DialogNextLevel"
 DialogNextLevel:
   .import binary "./assets/nextlevel.bin"
+* = * "DialogGameOver"
 DialogGameOver:
   .import binary "./assets/gameover.bin"
 
