@@ -135,6 +135,7 @@ SpriteCollision: {
     jsr ShowDialog
 }
 
+* = * "Utils ShowDialog"
 ShowDialog: {
     lda StartAddress + 1
     sta StartAddressHi
@@ -200,6 +201,7 @@ ShowDialog: {
     jsr GetRandom
 }
 
+* = * "Utils GetRandom"
 GetRandom: {
   Loop:
     lda $d012

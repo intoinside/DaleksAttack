@@ -10,6 +10,7 @@
 
 #importonce
 
+// Initialize dalek for new level
 .macro Init(dalekCount) {
     lda #dalekCount
     sta Dalek.DalekCount
