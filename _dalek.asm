@@ -27,6 +27,11 @@
     jsr Dalek.HandleDalekMove
 }
 
+.macro SaveDalekCollisionDetection() {
+    lda c64lib.SPRITE_2S_COLLISION
+    sta Dalek.SpriteCollisionBuffer
+}
+
 .filenamespace Dalek
 
 * = * "Dalek HandleDalekMove"
@@ -79,7 +84,7 @@ HandleDalekMove: {
 
 // Check collision between current dalek and other daleks
   CheckCollisionWithOtherDalek:
-    lda c64lib.SPRITE_2S_COLLISION
+    lda SpriteCollisionBuffer
     and DalekToMoveBitMask
 // No sprite collision detected, move dalek    
     beq AliveAndNotExploding
@@ -244,6 +249,9 @@ DeadBitmask:        .byte 0
 
 // Dalek bitmask exploding status, each bit is a dalek (1 means exploding)
 ExplodingBitmask:   .byte 0
+
+// Sprite collision saver at the end of every loop
+SpriteCollisionBuffer: .byte 0
 
 #import "_level.asm"
 #import "_utils.asm"

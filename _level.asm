@@ -27,6 +27,8 @@ Manager: {
     HandleDalekMove(%00000100, 2)
     HandleDalekMove(%00001000, 3)
 
+    SaveDalekCollisionDetection()
+
     lda GameEnded
     beq JoystickMovement
 
