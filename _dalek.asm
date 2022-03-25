@@ -164,16 +164,20 @@ AnimateExploding: {
     lda #SPRITES.DalekDebris
     sta Level.FirstSpritePointer, x
 
+// Check if all dalek are exploded
     lda ExplodedCount
     cmp DalekCount
     bcc Done
 
+// All dalek are exploded
     lda #$ff
     sta c64lib.SPRITE_PRIORITY
 
     // All dalek are dead, show next level dialog
     ShowDialogNextLevel(Level.ScreenMemoryBaseAddress)
 
+    inc Level.LevelCompleted
+    
     jmp Done
   !:
     inc Level.FirstSpritePointer, x

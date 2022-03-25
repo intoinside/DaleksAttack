@@ -29,11 +29,26 @@ Manager: {
 
     SaveDalekCollisionDetection()
 
+// Check if level completed
+    lda Level.LevelCompleted
+    bne HandleLevelCompleted
+
+// Level completed, dialog shown, wait for Return keypress
+  HandleLevelCompleted:
+    IsReturnPressed()
+    beq HandleLevelCompleted
+
+    jsr SetupNextLevel
+
+// Check if game ended
+  !:
     lda GameEnded
     beq JoystickMovement
 
+// Game ended, handle it better!
   !:
     jmp !-
+
     rts
 }
 
@@ -104,6 +119,16 @@ Init: {
     jmp AddColorToMap   // jsr + rts
 }
 
+* = * "Level SetupNextLevel"
+SetupNextLevel: {
+    CopyScreenRam(MapDummyArea, ScreenMemoryBaseAddress)
+
+    inc CurrentLevel
+
+    rts
+}
+
+* = * "Level AddColorToMap"
 AddColorToMap: {
     lda #>ScreenMemoryBaseAddress
     sta SetColorToChars.ScreenMemoryAddress
@@ -155,7 +180,11 @@ TimedRoutine10th: {
   DelayRequested: .byte 8     // 8/50 second delay
 }
 
+// Hold current level
 CurrentLevel: .byte 1
+
+// Detect if level has been completed
+LevelCompleted: .byte 0
 
 .label ScreenMemoryBaseAddress = $4400
 
@@ -170,6 +199,7 @@ CurrentLevel: .byte 1
 
 #import "_utils.asm"
 #import "_joystick.asm"
+#import "_keyboard.asm"
 #import "_player.asm"
 #import "_dalek.asm"
 

@@ -95,6 +95,7 @@ SpriteCollision: {
   OtherY: .byte $00
 }
 
+// Create a screen memory backup from StartAddress to EndAddress
 .macro CopyScreenRam(StartAddress, EndAddress) {
     ldx #250
   !:
