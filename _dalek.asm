@@ -168,6 +168,9 @@ AnimateExploding: {
     cmp DalekCount
     bcc Done
 
+    lda #$ff
+    sta c64lib.SPRITE_PRIORITY
+
     // All dalek are dead, show next level dialog
     ShowDialogNextLevel(Level.ScreenMemoryBaseAddress)
 
@@ -198,6 +201,9 @@ Explode: {
 * = * "Dalek Init"
 Init: {
     lda #0
+
+    sta c64lib.SPRITE_PRIORITY
+
     sta DeadBitmask
     sta ExplodingBitmask  
     sta ExplodedCount 
