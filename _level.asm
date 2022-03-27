@@ -36,7 +36,7 @@ Manager: {
     SaveDalekCollisionDetection()
 
 // Check if level completed
-    lda Level.LevelCompleted
+    lda LevelCompleted
     beq CheckEndGame
 
     lda #$ff
@@ -141,6 +141,19 @@ LevelInit: {
     sta c64lib.SPRITE_ENABLE
     sta c64lib.SPRITE_COL_MODE
 
+    lda #DalekSpeedUpToLevel4
+    sta Dalek.HandleDalekMove.DalekSpeed
+
+    lda CurrentLevel
+    cmp #5
+    bcc !+
+
+    lda #DalekSpeedUpToLevel4
+    clc
+    adc #4
+    sbc CurrentLevel
+    sta Dalek.HandleDalekMove.DalekSpeed
+  !:
     DalekInit()
 
 // Player position
@@ -156,7 +169,7 @@ LevelInit: {
 }
 
 GetSpriteMaskForLevel: {
-    ldx Level.CurrentLevel
+    ldx CurrentLevel
     dex
     cpx #4
     bcc !+
@@ -173,8 +186,12 @@ GetSpriteMaskForLevel: {
 SetupNextLevel: {
     CopyScreenRam(MapDummyArea, ScreenMemoryBaseAddress)
 
-    inc CurrentLevel
+    lda CurrentLevel
+    cmp #MaxLevel
+    bcs !+
 
+    inc CurrentLevel
+  !:
     rts
 }
 
@@ -230,6 +247,8 @@ TimedRoutine10th: {
   DelayRequested: .byte 8     // 8/50 second delay
 }
 
+.label MaxLevel = 12
+
 // Hold current level
 CurrentLevel: .byte 1
 
@@ -247,6 +266,8 @@ LevelCompleted: .byte 0
 .label SPRITE_4     = FirstSpritePointer + 4
 .label SPRITE_5     = FirstSpritePointer + 5
 .label SPRITE_6     = FirstSpritePointer + 6
+
+.label DalekSpeedUpToLevel4 = 10
 
 #import "_utils.asm"
 #import "_joystick.asm"
