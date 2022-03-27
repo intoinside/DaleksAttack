@@ -160,7 +160,7 @@ GetSpriteMaskForLevel: {
     dex
     cpx #4
     bcc !+
-    ldx #4
+    ldx #3
   !:
     lda SpriteForLevelMask, x
 
