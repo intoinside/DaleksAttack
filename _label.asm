@@ -37,10 +37,15 @@ SPRITES: {
 // Player
   .label PLAYER             = $54
 
+// Explosions
   .label DalekExplosion1    = $5c
   .label DalekExplosion2    = $5d
   .label DalekExplosion3    = $5e
   .label DalekExplosion4    = $5f
   .label DalekExplosion5    = $60
   .label DalekDebris        = $61
+
+// Bombs
+  .label BombFrame1         = $62
+  .label BombFrame2         = $63
 }

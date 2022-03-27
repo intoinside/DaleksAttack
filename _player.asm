@@ -61,6 +61,94 @@ HandlePlayerMove: {
     rts
 }
 
+* = * "Player HandleBomb"
+HandleBomb: {
+    dec CurrentFrame
+    bne Done
+
+    lda #16
+    sta CurrentFrame
+
+// Switch bomb frame
+    lda Level.SPRITE_7
+    cmp #SPRITES.BombFrame1
+    bne !+
+    inc Level.SPRITE_7
+    jmp Done
+  !:
+    dec Level.SPRITE_7
+
+  Done:
+    rts
+
+  CurrentFrame: .byte 1
+}
+
+* = * "Player BombDropped"
+BombDropped: {
+    lda BombActive
+    beq CheckIfBombIsReleased
+
+// A bomb has been already dropped, handle its frame
+    jsr HandleBomb
+    jmp Done
+
+  CheckIfBombIsReleased:
+    lda BombsLeft
+    beq Done
+
+    IsBKeyPressed()
+    beq Done
+
+    dec BombsLeft
+    jsr UpdateBombLeftOnUi
+    inc BombActive
+
+    lda c64lib.SPRITE_0_X
+    sta c64lib.SPRITE_7_X
+    lda c64lib.SPRITE_0_Y
+    sta c64lib.SPRITE_7_Y
+
+    lda c64lib.SPRITE_ENABLE
+    ora #%10000000
+    sta c64lib.SPRITE_ENABLE
+    
+  Done:
+    rts
+}
+
+* = * "Player BombExploded"
+BombExploded: {
+    lda BombActive
+    beq Done
+
+    lda c64lib.SPRITE_ENABLE
+    and #%01111111
+    sta c64lib.SPRITE_ENABLE
+
+    dec BombActive
+  Done:
+    rts
+}
+
+UpdateBombLeftOnUi: {
+    lda BombsLeft
+    clc
+    adc #48
+    sta BombsLeftOnUi
+ 
+    rts
+
+  .label BombsLeftOnUi = Level.ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
+}
+
+BombActive: .byte 0
+
+// Count of bombs left
+BombsLeft: .byte 2
+.label BombsAvailableAtLevelStart = 2
+
+#import "_level.asm"
 #import "_utils.asm"
 #import "_joystick.asm"
 

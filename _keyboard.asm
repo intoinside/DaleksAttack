@@ -20,6 +20,14 @@
     sta Keyboard.ReturnPressed
 }
 
+.macro IsBKeyPressed() {
+    lda #%11110111
+    sta Keyboard.DetectKeyPressed.MaskOnPortA
+    lda #%00010000
+    sta Keyboard.DetectKeyPressed.MaskOnPortB
+    jsr Keyboard.DetectKeyPressed
+}
+
 /*
 // Set Keyboard.IKeyPressed if I is pressed
 .macro IsIKeyPressed() {

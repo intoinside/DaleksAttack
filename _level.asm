@@ -26,6 +26,7 @@ Manager: {
     jsr Joystick.GetJoystickMove
 
     jsr Player.HandlePlayerMove
+    jsr Player.BombDropped
     HandleDalekMove(%00000010, 1)
     HandleDalekMove(%00000100, 2)
     HandleDalekMove(%00001000, 3)
@@ -105,6 +106,7 @@ Init: {
     sta c64lib.SPRITE_4_COLOR
     sta c64lib.SPRITE_5_COLOR
     sta c64lib.SPRITE_6_COLOR
+    sta c64lib.SPRITE_7_COLOR
 
     lda #SPRITES.DALEK_RIGHT
     sta SPRITE_1
@@ -113,6 +115,10 @@ Init: {
     sta SPRITE_4
     sta SPRITE_5
     sta SPRITE_6
+
+// Bomb sprite
+    lda #SPRITES.BombFrame1
+    sta SPRITE_7
 
 // Reset all-dalek coordinates
     lda #0
@@ -139,7 +145,6 @@ Init: {
 LevelInit: {
     jsr GetSpriteMaskForLevel
     sta c64lib.SPRITE_ENABLE
-    sta c64lib.SPRITE_COL_MODE
 
     lda #DalekSpeedUpToLevel4
     sta Dalek.HandleDalekMove.DalekSpeed
@@ -154,6 +159,10 @@ LevelInit: {
     sbc CurrentLevel
     sta Dalek.HandleDalekMove.DalekSpeed
   !:
+    lda #Player.BombsAvailableAtLevelStart
+    sta Player.BombsLeft
+    jsr Player.UpdateBombLeftOnUi
+
     DalekInit()
 
 // Player position
@@ -168,6 +177,7 @@ LevelInit: {
     rts
 }
 
+* = * "Level GetSpriteMaskForLevel"
 GetSpriteMaskForLevel: {
     ldx CurrentLevel
     dex
@@ -266,6 +276,7 @@ LevelCompleted: .byte 0
 .label SPRITE_4     = FirstSpritePointer + 4
 .label SPRITE_5     = FirstSpritePointer + 5
 .label SPRITE_6     = FirstSpritePointer + 6
+.label SPRITE_7     = FirstSpritePointer + 7
 
 .label DalekSpeedUpToLevel4 = 10
 

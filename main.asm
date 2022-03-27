@@ -44,6 +44,10 @@ GamePlay: {
 // Show intro screen until player start a new game
 //    jsr Intro.Manager
 
+  !:  
+    IsReturnPressed()
+    beq !-
+    
 // Init a new game
     InitNewGame()
 
