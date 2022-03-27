@@ -86,9 +86,6 @@ HandleBomb: {
 
 * = * "Player BombDropped"
 BombDropped: {
-    lda BombsLeft
-    beq Done
-
     lda BombActive
     beq CheckIfBombIsReleased
 
@@ -97,10 +94,14 @@ BombDropped: {
     jmp Done
 
   CheckIfBombIsReleased:
+    lda BombsLeft
+    beq Done
+
     IsBKeyPressed()
     beq Done
 
     dec BombsLeft
+    jsr UpdateBombLeftOnUi
     inc BombActive
 
     lda c64lib.SPRITE_0_X
@@ -128,6 +129,17 @@ BombExploded: {
     dec BombActive
   Done:
     rts
+}
+
+UpdateBombLeftOnUi: {
+    lda BombsLeft
+    clc
+    adc #48
+    sta BombsLeftOnUi
+ 
+    rts
+
+  .label BombsLeftOnUi = Level.ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
 }
 
 BombActive: .byte 0

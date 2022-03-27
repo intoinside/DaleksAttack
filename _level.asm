@@ -161,6 +161,7 @@ LevelInit: {
   !:
     lda #Player.BombsAvailableAtLevelStart
     sta Player.BombsLeft
+    jsr Player.UpdateBombLeftOnUi
 
     DalekInit()
 
