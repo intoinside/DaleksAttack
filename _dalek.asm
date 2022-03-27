@@ -99,6 +99,11 @@ HandleDalekMove: {
 
 // Check collision between current dalek and other daleks
   CheckCollisionWithOtherDalek:
+// Avoid collision with player
+    lda SpriteCollisionBuffer
+    and #%00000001
+    bne AliveAndNotExploding
+
     lda SpriteCollisionBuffer
     and DalekToMoveBitMask
 // No sprite collision detected, move dalek    
