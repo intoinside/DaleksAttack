@@ -90,12 +90,16 @@ HandleDalekMove: {
 
     jsr SpriteCollision
 
-// No collision detected, check if there is collision between dalek
-    beq CheckCollisionWithOtherDalek
-
 // Collision dalek-player, game end and exit
-    sta GameEnded
-    jmp Done
+    bne EndGame
+
+// No collision detected, check if there is collision between dalek
+
+// Check collision between bomb and player
+  CheckCollisionWithBomb:
+    lda SpriteCollisionBuffer
+    and #%10000001
+    bne EndGame
 
 // Check collision between current dalek and other daleks
   CheckCollisionWithOtherDalek:
@@ -144,6 +148,11 @@ HandleDalekMove: {
     dec c64lib.SPRITE_0_Y, x
 
   Done:
+    rts
+
+  EndGame:
+    lda #1
+    sta GameEnded
     rts
 
 
