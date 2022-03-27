@@ -214,6 +214,8 @@ Explode: {
 
     inc ExplodedCount
 
+    jsr Player.BombExploded
+
     rts
 }
 
