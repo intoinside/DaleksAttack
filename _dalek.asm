@@ -144,8 +144,7 @@ HandleDalekMove: {
     rts
 
   EndGame:
-    lda #1
-    sta GameEnded
+    jsr GameEnds
     rts
 
 // Currently moving sprint (bit set)
@@ -164,13 +163,21 @@ HandleDalekMove: {
   DalekSpeed:       .byte 8
 }
 
+* = * "Dalek GameEnds"
+GameEnds: {
+    lda #1
+    sta GameEnded
+
+    rts
+}
+
 // Manage current dalek explosion
 * = * "Dalek AnimateExploding"
 AnimateExploding: {
     ldx HandleDalekMove.DalekIndex
 
 // Get current explosion frame
-    lda Level.FirstSpritePointer, x
+    lda FirstSpritePointer, x
     cmp #SPRITES.DalekDebris
     bcs Done
     cmp #SPRITES.DalekExplosion5
@@ -182,7 +189,7 @@ AnimateExploding: {
     sta DeadBitmask
 
     lda #SPRITES.DalekDebris
-    sta Level.FirstSpritePointer, x
+    sta FirstSpritePointer, x
 
 // Check if all dalek are exploded
     lda ExplodedCount
@@ -190,13 +197,13 @@ AnimateExploding: {
     bcc Done
 
     // All dalek are dead, show next level dialog
-    ShowDialogNextLevel(Level.ScreenMemoryBaseAddress)
+    ShowDialogNextLevel(ScreenMemoryBaseAddress)
 
     inc Level.LevelCompleted
     
     jmp Done
   !:
-    inc Level.FirstSpritePointer, x
+    inc FirstSpritePointer, x
 
   Done:
     rts
@@ -211,7 +218,7 @@ Explode: {
 
     ldy HandleDalekMove.DalekIndex
     lda #SPRITES.DalekExplosion1
-    sta Level.FirstSpritePointer, y
+    sta FirstSpritePointer, y
 
     inc ExplodedCount
 
@@ -307,7 +314,7 @@ ExplodingBitmask:   .byte 0
 // Sprite collision saver at the end of every loop
 SpriteCollisionBuffer: .byte 0
 
-#import "_level.asm"
+//#import "_level.asm"
 #import "_sounds.asm"
 #import "_utils.asm"
 #import "_label.asm"

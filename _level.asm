@@ -68,7 +68,6 @@ Manager: {
 Init: {
     CopyScreenRam(ScreenMemoryBaseAddress, MapDummyArea)
 
-    // jsr SetSpriteToForeground
 // Set background and border color to brown
     lda #GRAY
     sta c64lib.BG_COL_0
@@ -137,6 +136,8 @@ Init: {
 
     lda #0
     sta c64lib.SPRITE_PRIORITY
+
+    jsr Player.Init
 
     jmp AddColorToMap   // jsr + rts
 }
@@ -264,19 +265,6 @@ CurrentLevel: .byte 1
 
 // Detect if level has been completed
 LevelCompleted: .byte 0
-
-.label ScreenMemoryBaseAddress = $4400
-
-.label FirstSpritePointer = ScreenMemoryBaseAddress + $3f8
-
-.label SPRITE_0     = FirstSpritePointer
-.label SPRITE_1     = FirstSpritePointer + 1
-.label SPRITE_2     = FirstSpritePointer + 2
-.label SPRITE_3     = FirstSpritePointer + 3
-.label SPRITE_4     = FirstSpritePointer + 4
-.label SPRITE_5     = FirstSpritePointer + 5
-.label SPRITE_6     = FirstSpritePointer + 6
-.label SPRITE_7     = FirstSpritePointer + 7
 
 .label DalekSpeedUpToLevel4 = 10
 
