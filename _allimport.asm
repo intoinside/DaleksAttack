@@ -18,9 +18,10 @@
 * = $4800 "DialogNextLevel"
 DialogNextLevel:
   .import binary "./assets/nextlevel.bin"
-* = * "DialogGameOver"
 DialogGameOver:
   .import binary "./assets/gameover.bin"
+DialogDead:
+  .import binary "./assets/dead.bin"
 
 .segment MapDummyArea
 * = $5000 "MapDummyArea"
