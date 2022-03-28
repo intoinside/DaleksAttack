@@ -93,14 +93,6 @@ HandleDalekMove: {
 // Collision dalek-player, game end and exit
     bne EndGame
 
-// No collision detected, check if there is collision between dalek
-
-// Check collision between bomb and player
-  CheckCollisionWithBomb:
-    lda SpriteCollisionBuffer
-    and #%10000001
-    bne EndGame
-
 // Check collision between current dalek and other daleks
   CheckCollisionWithOtherDalek:
 // Avoid collision with player
@@ -115,6 +107,7 @@ HandleDalekMove: {
 
 // Collision detected, set collided dalek as exploded and then exit
     jsr Explode
+    jsr Sounds.Explosion
     jmp Done
 
   AliveAndNotExploding:
@@ -154,7 +147,6 @@ HandleDalekMove: {
     lda #1
     sta GameEnded
     rts
-
 
 // Currently moving sprint (bit set)
   DalekToMoveBitMask: .byte 0
@@ -316,6 +308,7 @@ ExplodingBitmask:   .byte 0
 SpriteCollisionBuffer: .byte 0
 
 #import "_level.asm"
+#import "_sounds.asm"
 #import "_utils.asm"
 #import "_label.asm"
 
