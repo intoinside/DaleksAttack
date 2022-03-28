@@ -168,6 +168,11 @@ GameEnds: {
     lda #1
     sta GameEnded
 
+    ShowDialogDead(ScreenMemoryBaseAddress)
+  !:
+    IsReturnPressed()
+    beq !-
+
     rts
 }
 

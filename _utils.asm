@@ -136,6 +136,18 @@ SpriteCollision: {
     jsr ShowDialog
 }
 
+.macro ShowDialogDead(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogDead
+    sta ShowDialog.DialogAddress
+    lda #>DialogDead
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
 * = * "Utils ShowDialog"
 ShowDialog: {
     lda StartAddress + 1
@@ -185,7 +197,7 @@ ShowDialog: {
   .label DialogStartY = 5;
 
   .label DialogWidth = 10;
-  .label DialogHeight = 11;
+  .label DialogHeight = 12;
 
   IsShown: .byte $00
 
