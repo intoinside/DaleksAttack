@@ -54,6 +54,17 @@ preprocess {
                 right = 50
                 bottom = 12
                 interleaver {
+                    output = file("assets/dialogempty.bin")
+                }
+                interleaver {
+                }
+            }
+            map {
+                left = 50
+                top = 0
+                right = 60
+                bottom = 12
+                interleaver {
                     output = file("assets/nextlevel.bin")
                 }
                 interleaver {
@@ -65,18 +76,18 @@ preprocess {
                 right = 50
                 bottom = 24
                 interleaver {
-                    output = file("assets/gameover.bin")
+                    output = file("assets/dead.bin")
                 }
                 interleaver {
                 }
             }
             map {
                 left = 50
-                top = 0
+                top = 12
                 right = 60
-                bottom = 12
+                bottom = 24
                 interleaver {
-                    output = file("assets/dead.bin")
+                    output = file("assets/gameover.bin")
                 }
                 interleaver {
                 }

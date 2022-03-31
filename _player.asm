@@ -18,6 +18,14 @@ Init: {
     sta LifesLeft
     jsr UpdateLifesLeftOnUi
 
+    lda #BombsAvailableAtLevelStart
+    sta BombsLeft
+    jsr UpdateBombLeftOnUi
+
+    lda #0
+    sta BombActive
+    sta PlayerDead
+
     rts
 }
 
@@ -140,6 +148,37 @@ BombExploded: {
     rts
 }
 
+* = * "Player LifeLost"
+LifeLost: {
+    inc PlayerDead
+
+    dec LifesLeft
+    beq IsDead
+
+    ShowDialogDead(ScreenMemoryBaseAddress)
+    jmp !+
+
+  IsDead:
+    inc GameEnded
+    ShowDialogGameOver(ScreenMemoryBaseAddress)
+
+  !:
+    IsReturnPressed()
+    beq !-
+
+    jsr UpdateLifesLeftOnUi
+
+    rts
+}
+
+* = * "Player StartNewLife"
+StartNewLife: {
+    dec PlayerDead
+
+    rts
+}
+
+* = * "Player UpdateLifesLeftOnUi"
 UpdateLifesLeftOnUi: {
     lda LifesLeft
     clc
@@ -148,9 +187,10 @@ UpdateLifesLeftOnUi: {
  
     rts
 
-  .label LifesLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 15)
+  .label LifesLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
 }
 
+* = * "Player UpdateBombLeftOnUi"
 UpdateBombLeftOnUi: {
     lda BombsLeft
     clc
@@ -159,7 +199,7 @@ UpdateBombLeftOnUi: {
  
     rts
 
-  .label BombsLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
+  .label BombsLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 21)
 }
 
 BombActive: .byte 0
@@ -170,6 +210,8 @@ BombsLeft: .byte 2
 
 LifesLeft: .byte 3
 .label LifesAvailableAtLevelStart = 3
+
+PlayerDead: .byte 0
 
 #import "_level.asm"
 #import "_utils.asm"

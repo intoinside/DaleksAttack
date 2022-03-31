@@ -148,8 +148,25 @@ SpriteCollision: {
     jsr ShowDialog
 }
 
+.macro HideDialog(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogEmpty
+    sta ShowDialog.DialogAddress
+    lda #>DialogEmpty
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+    lda #0
+    sta c64lib.SPRITE_PRIORITY
+}
+
 * = * "Utils ShowDialog"
 ShowDialog: {
+    lda #$ff
+    sta c64lib.SPRITE_PRIORITY
+
     lda StartAddress + 1
     sta StartAddressHi
 

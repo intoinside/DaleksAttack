@@ -38,10 +38,7 @@ Manager: {
 
 // Check if level completed
     lda LevelCompleted
-    beq CheckEndGame
-
-    lda #$ff
-    sta c64lib.SPRITE_PRIORITY
+    beq CheckGameEnded
 
 // Level completed, dialog shown, wait for Return keypress
   HandleLevelCompleted:
@@ -49,12 +46,23 @@ Manager: {
     beq HandleLevelCompleted
 
     jsr SetupNextLevel
+    jmp StartLevel
 
-// Check if game ended
-  CheckEndGame:
+  CheckGameEnded:
     lda GameEnded
-    bne !+
+    beq CheckPlayerDead
+
+    jsr StartNewGame
+    jmp StartLevel
+
+  CheckPlayerDead:
+    lda Player.PlayerDead
+    beq GameInProgress
     
+    jsr StartNewLife
+    jmp StartLevel
+
+  GameInProgress:
     jmp JoystickMovement
 
 // Game ended, handle it better!
@@ -66,8 +74,6 @@ Manager: {
 
 * = * "Level Init"
 Init: {
-    CopyScreenRam(ScreenMemoryBaseAddress, MapDummyArea)
-
 // Set background and border color to brown
     lda #GRAY
     sta c64lib.BG_COL_0
@@ -107,14 +113,6 @@ Init: {
     sta c64lib.SPRITE_6_COLOR
     sta c64lib.SPRITE_7_COLOR
 
-    lda #SPRITES.DALEK_RIGHT
-    sta SPRITE_1
-    sta SPRITE_2
-    sta SPRITE_3
-    sta SPRITE_4
-    sta SPRITE_5
-    sta SPRITE_6
-
 // Bomb sprite
     lda #SPRITES.BombFrame1
     sta SPRITE_7
@@ -138,6 +136,7 @@ Init: {
     sta c64lib.SPRITE_PRIORITY
 
     jsr Player.Init
+    jsr UpdateLevelOnUi
 
     jmp AddColorToMap   // jsr + rts
 }
@@ -166,6 +165,17 @@ LevelInit: {
 
     DalekInit()
 
+    lda #SPRITES.DALEK_RIGHT
+    sta SPRITE_1
+    sta SPRITE_2
+    sta SPRITE_3
+    sta SPRITE_4
+    sta SPRITE_5
+    sta SPRITE_6
+
+    lda #0
+    sta LevelCompleted
+
 // Player position
     GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
     sta c64lib.SPRITE_0_X
@@ -193,17 +203,56 @@ GetSpriteMaskForLevel: {
   SpriteForLevelMask: .byte %00001111, %00011111, %00111111, %01111111
 }
 
+* = * "Level StartNewGame"
+StartNewGame: {
+    HideDialog(ScreenMemoryBaseAddress)
+
+    lda #0
+    sta GameEnded
+    sta LevelCompleted
+
+    lda #1
+    sta CurrentLevel
+    jsr UpdateLevelOnUi
+
+    jsr Player.Init
+
+    rts
+}
+
 * = * "Level SetupNextLevel"
 SetupNextLevel: {
-    CopyScreenRam(MapDummyArea, ScreenMemoryBaseAddress)
+    HideDialog(ScreenMemoryBaseAddress)
 
     lda CurrentLevel
     cmp #MaxLevel
     bcs !+
 
     inc CurrentLevel
+    jsr UpdateLevelOnUi
   !:
     rts
+}
+
+* = * "Level StartNewLife"
+StartNewLife: {
+    HideDialog(ScreenMemoryBaseAddress)
+
+    jsr Player.StartNewLife
+
+    rts
+}
+
+* = * "Level UpdateLifesLeftOnUi"
+UpdateLevelOnUi: {
+    lda CurrentLevel
+    clc
+    adc #48
+    sta CurrentLevelOnUi
+ 
+    rts
+
+  .label CurrentLevelOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 8)
 }
 
 * = * "Level AddColorToMap"

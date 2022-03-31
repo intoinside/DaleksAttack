@@ -26,6 +26,9 @@
 
 // Update requested Dalek movement, getting toward player
 .macro HandleDalekMove(dalekBitMask, dalekIndex) {
+    lda Player.PlayerDead
+    bne !+
+
     ldx Level.CurrentLevel
     inx
     inx
@@ -165,13 +168,7 @@ HandleDalekMove: {
 
 * = * "Dalek GameEnds"
 GameEnds: {
-    lda #1
-    sta GameEnded
-
-    ShowDialogDead(ScreenMemoryBaseAddress)
-  !:
-    IsReturnPressed()
-    beq !-
+    jsr Player.LifeLost
 
     rts
 }
