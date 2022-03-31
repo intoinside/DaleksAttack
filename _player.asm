@@ -12,6 +12,23 @@
 
 .filenamespace Player
 
+* = * "Player Init"
+Init: {
+    lda #LifesAvailableAtLevelStart
+    sta LifesLeft
+    jsr UpdateLifesLeftOnUi
+
+    lda #BombsAvailableAtLevelStart
+    sta BombsLeft
+    jsr UpdateBombLeftOnUi
+
+    lda #0
+    sta BombActive
+    sta PlayerDead
+
+    rts
+}
+
 * = * "Player HandlePlayerMove"
 HandlePlayerMove: {
 // Direction is 0, no horizontal move
@@ -70,13 +87,13 @@ HandleBomb: {
     sta CurrentFrame
 
 // Switch bomb frame
-    lda Level.SPRITE_7
+    lda SPRITE_7
     cmp #SPRITES.BombFrame1
     bne !+
-    inc Level.SPRITE_7
+    inc SPRITE_7
     jmp Done
   !:
-    dec Level.SPRITE_7
+    dec SPRITE_7
 
   Done:
     rts
@@ -131,6 +148,49 @@ BombExploded: {
     rts
 }
 
+* = * "Player LifeLost"
+LifeLost: {
+    inc PlayerDead
+
+    dec LifesLeft
+    beq IsDead
+
+    ShowDialogDead(ScreenMemoryBaseAddress)
+    jmp !+
+
+  IsDead:
+    inc GameEnded
+    ShowDialogGameOver(ScreenMemoryBaseAddress)
+
+  !:
+    IsReturnPressed()
+    beq !-
+
+    jsr UpdateLifesLeftOnUi
+
+    rts
+}
+
+* = * "Player StartNewLife"
+StartNewLife: {
+    dec PlayerDead
+
+    rts
+}
+
+* = * "Player UpdateLifesLeftOnUi"
+UpdateLifesLeftOnUi: {
+    lda LifesLeft
+    clc
+    adc #48
+    sta LifesLeftOnUi
+ 
+    rts
+
+  .label LifesLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
+}
+
+* = * "Player UpdateBombLeftOnUi"
 UpdateBombLeftOnUi: {
     lda BombsLeft
     clc
@@ -139,7 +199,7 @@ UpdateBombLeftOnUi: {
  
     rts
 
-  .label BombsLeftOnUi = Level.ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
+  .label BombsLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 21)
 }
 
 BombActive: .byte 0
@@ -147,6 +207,11 @@ BombActive: .byte 0
 // Count of bombs left
 BombsLeft: .byte 2
 .label BombsAvailableAtLevelStart = 2
+
+LifesLeft: .byte 3
+.label LifesAvailableAtLevelStart = 3
+
+PlayerDead: .byte 0
 
 #import "_level.asm"
 #import "_utils.asm"

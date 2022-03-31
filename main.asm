@@ -49,20 +49,12 @@ GamePlay: {
     beq !-
     
 // Init a new game
-    InitNewGame()
-
     jsr Level.Manager
     lda GameEnded
     bne GamePlay
 
   !:
     jmp !-
-}
-
-// Initialize vars for new game
-.macro InitNewGame() {
-    lda #0
-    sta GameEnded
 }
 
 // Initial environment setup
