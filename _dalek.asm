@@ -119,6 +119,7 @@ HandleDalekMove: {
 // Collision detected, set collided dalek as exploded and then exit
     jsr Explode
     jsr Sounds.Explosion
+    AddPoints(0, 0, 1, 0)
     jmp Done
 
   AliveAndNotExploding:
