@@ -44,6 +44,7 @@ HandlePlayerMove: {
     cmp #LIMIT_RIGHT
     beq CheckDirectionY
     inc c64lib.SPRITE_0_X
+    jsr FrameToRight
     jmp CheckDirectionY
 
   MoveToLeft:
@@ -51,6 +52,7 @@ HandlePlayerMove: {
     cmp #LIMIT_LEFT
     beq CheckDirectionY
     dec c64lib.SPRITE_0_X
+    jsr FrameToLeft
 
 // DirectionY is 0, no vertical move
   CheckDirectionY:
@@ -66,6 +68,7 @@ HandlePlayerMove: {
     cmp #LIMIT_DOWN
     beq Done
     inc c64lib.SPRITE_0_Y
+    jsr FrameToDown
     jmp Done
 
   MoveToUp:
@@ -73,10 +76,115 @@ HandlePlayerMove: {
     cmp #LIMIT_UP
     beq Done
     dec c64lib.SPRITE_0_Y
+    jsr FrameToUp
 
   Done:
     rts
 }
+
+* = * "Player FrameToRight"
+FrameToRight: {
+    jsr CanSwitchFrame
+    bcs Done
+
+    lda SPRITE_0
+    cmp #SPRITES.PLAYER_RIGHT
+    beq Switch
+  
+    lda #SPRITES.PLAYER_RIGHT
+    sta SPRITE_0
+    rts
+
+  Switch:
+    inc SPRITE_0
+
+  Done:
+    rts
+}
+
+* = * "Player FrameToLeft"
+FrameToLeft: {
+    jsr CanSwitchFrame
+    bcs Done
+
+    lda SPRITE_0
+    cmp #SPRITES.PLAYER_LEFT
+    beq Switch
+  
+    lda #SPRITES.PLAYER_LEFT
+    sta SPRITE_0
+    rts
+
+  Switch:
+    inc SPRITE_0
+
+  Done:
+    rts
+}
+
+* = * "Player FrameToLeft"
+FrameToUp: {
+    lda Joystick.Direction
+    bne Done
+
+    jsr CanSwitchFrame
+    bcs Done
+
+    lda SPRITE_0
+    cmp #SPRITES.PLAYER_UP
+    beq Switch
+  
+    lda #SPRITES.PLAYER_UP
+    sta SPRITE_0
+    rts
+
+  Switch:
+    inc SPRITE_0
+
+  Done:
+    rts
+}
+
+* = * "Player FrameToDown"
+FrameToDown: {
+    lda Joystick.Direction
+    bne Done
+
+    jsr CanSwitchFrame
+    bcs Done
+
+    lda SPRITE_0
+    cmp #SPRITES.PLAYER_DOWN
+    beq Switch
+  
+    lda #SPRITES.PLAYER_DOWN
+    sta SPRITE_0
+    rts
+
+  Switch:
+    inc SPRITE_0
+
+  Done:
+    rts
+}
+
+* = * "Player CanSwitchFrame"
+CanSwitchFrame: {
+    dec FrameDelay
+    lda FrameDelay
+    lsr
+    lsr
+    lsr
+    bcs Done
+
+    lda #0
+    sta FrameDelay
+
+  Done:
+    rts
+}
+
+FrameDelay: .byte 0
 
 * = * "Player HandleBomb"
 HandleBomb: {

@@ -48,7 +48,14 @@ SPRITES: {
   .label DALEK_DOWN         = $53
 
 // Player
-  .label PLAYER             = $54
+  .label PLAYER_DOWN        = $54
+  .label PLAYER_DOWN_1      = $55
+  .label PLAYER_RIGHT       = $56
+  .label PLAYER_RIGHT_1     = $57
+  .label PLAYER_LEFT        = $58
+  .label PLAYER_LEFT_1      = $59
+  .label PLAYER_UP          = $5a
+  .label PLAYER_UP_1        = $5b
 
 // Explosions
   .label DalekExplosion1    = $5c

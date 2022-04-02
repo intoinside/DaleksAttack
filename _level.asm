@@ -100,7 +100,7 @@ Init: {
 // Player sprite setting
     lda #$0a
     sta c64lib.SPRITE_0_COLOR
-    lda #SPRITES.PLAYER
+    lda #SPRITES.PLAYER_DOWN
     sta SPRITE_0
 
 // Dalek sprite setting
