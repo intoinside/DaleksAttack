@@ -54,11 +54,19 @@
 
 * = * "Dalek HandleDalekMove"
 HandleDalekMove: {
-    ldx DalekIndex
+    lda DalekIndex
+    tax
+    tay
     dex
     dec DalekSpeedDummy, x
-    bne Done
+    bne DoneFar
 
+    jmp !+
+
+  DoneFar:
+    jmp Done
+
+  !:
     lda DalekSpeed
     sta DalekSpeedDummy, x
     inx
@@ -67,7 +75,7 @@ HandleDalekMove: {
     lda DalekToMoveBitMask
     and DeadBitmask
 // If is dead, exit
-    bne Done
+    bne DoneFar
 
 // Check if current dalek is exploding
     lda DalekToMoveBitMask
@@ -123,10 +131,15 @@ HandleDalekMove: {
 
   MoveRight:
     inc c64lib.SPRITE_0_X, x
+    lda #SPRITES.DALEK_RIGHT
+    sta SPRITE_0, y
+
     jmp CheckVertical
 
   MoveLeft:
     dec c64lib.SPRITE_0_X, x
+    lda #SPRITES.DALEK_LEFT
+    sta SPRITE_0, y
 
   CheckVertical:
     lda c64lib.SPRITE_0_Y
@@ -138,10 +151,14 @@ HandleDalekMove: {
 
   MoveDown:
     inc c64lib.SPRITE_0_Y, x
+    lda #SPRITES.DALEK_UP
+    sta SPRITE_0, y
     jmp Done
 
   MoveUp:
     dec c64lib.SPRITE_0_Y, x
+    lda #SPRITES.DALEK_DOWN
+    sta SPRITE_0, y
 
   Done:
     rts
