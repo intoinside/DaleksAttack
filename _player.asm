@@ -182,9 +182,9 @@ CanSwitchFrame: {
 
   Done:
     rts
-}
 
-FrameDelay: .byte 0
+  FrameDelay: .byte 0
+}
 
 * = * "Player HandleBomb"
 HandleBomb: {
