@@ -317,7 +317,7 @@ CurrentLevel: .byte 1
 // Detect if level has been completed
 LevelCompleted: .byte 0
 
-.label DalekSpeedUpToLevel4 = 10
+.label DalekSpeedUpToLevel4 = 8
 
 #import "_utils.asm"
 #import "_joystick.asm"

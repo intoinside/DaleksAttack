@@ -307,7 +307,6 @@ DeterminePosition: {
     GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
     sta c64lib.SPRITE_6_Y
 
-* = * "Dalek DeterminePosition CheckPosition"
   CheckPosition:
 // If a collision is detected, restart from beginning
     lda c64lib.SPRITE_2S_COLLISION
