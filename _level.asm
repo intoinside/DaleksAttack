@@ -138,6 +138,8 @@ Init: {
     jsr Player.Init
     jsr UpdateLevelOnUi
 
+    jsr ResetScore
+
     jmp AddColorToMap   // jsr + rts
 }
 

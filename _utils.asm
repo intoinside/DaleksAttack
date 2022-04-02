@@ -95,6 +95,95 @@ SpriteCollision: {
   OtherY: .byte $00
 }
 
+
+// Add points to current score
+.macro AddPoints(digit4, digit3, digit2, digit1) {
+    lda #digit1
+    sta AddScore.Points + 3
+    lda #digit2
+    sta AddScore.Points + 2
+    lda #digit3
+    sta AddScore.Points + 1
+    lda #digit4
+    sta AddScore.Points
+
+    jsr AddScore
+}
+
+* = * "Utils AddScore"
+AddScore: {
+    ldx #4
+    clc
+  !:
+    lda CurrentScore - 1, x
+    adc Points - 1, x
+    cmp #10
+    bcc SaveDigit
+    sbc #10
+    sec
+
+  SaveDigit:
+    sta CurrentScore - 1, x
+    dex
+    bne !-
+
+  Done:
+    jmp DrawScore   // jsr + rts
+
+  Points: .byte $00, $00, $00, $00
+}
+
+* = * "Utils ResetScore"
+ResetScore: {
+    ldx #3
+    lda #0
+  !:
+    sta CurrentScore, x
+    dex
+    bne !-
+
+    jmp DrawScore   // jsr + rts
+}
+
+* = * "Utils DrawScore"
+DrawScore: {
+  // Append current score on score label
+    ldx #0
+    clc
+  !:
+    lda CurrentScore, x
+    adc #ZeroChar
+    sta ScoreLabel, x
+    inx
+    cpx #$04
+    bne !-
+
+  // Draws score label
+    ldx #0
+  LoopScore:
+    lda ScoreLabel, x
+  SelfMod:
+    sta ScorePtr
+    inc SelfMod + 1
+
+    inx
+    cpx #$0b
+    bne LoopScore
+
+    lda SelfMod + 1
+    sbc #$0b
+    sta SelfMod + 1
+
+    rts
+
+  .label ScorePtr = $beef
+}
+
+.label ZeroChar = 48;
+.label ScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 11);
+
+CurrentScore: .byte 0, 0, 0, 0
+
 // Create a screen memory backup from StartAddress to EndAddress
 .macro CopyScreenRam(StartAddress, EndAddress) {
     ldx #250
@@ -346,6 +435,7 @@ SetColorToChars: {
 }
 
 #import "_allimport.asm"
+#import "_label.asm"
 
 #import "chipset/lib/vic2.asm"
 #import "chipset/lib/vic2-global.asm"
