@@ -176,16 +176,20 @@ LevelInit: {
     lda #0
     sta LevelCompleted
 
-// Player position
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+// Player position (always in the middle)
+    lda #127
     sta c64lib.SPRITE_0_X
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
     sta c64lib.SPRITE_0_Y
 
 // Dalek position
     jsr Dalek.DeterminePosition
 
     rts
+
+  .label PlayerXMin = 22;
+  .label PlayerXMax = 70;
+  .label PlayerYMin = 48;
+  .label PlayerYMax = 90;
 }
 
 * = * "Level GetSpriteMaskForLevel"

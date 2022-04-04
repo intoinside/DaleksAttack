@@ -266,14 +266,14 @@ DeterminePosition: {
 
   Loop:
 // Calculate position for dalek 1,2,3 (they are always visible)
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    GetRandomNumberInRange(DalekX1Min, DalekX1Max)
     sta c64lib.SPRITE_1_X
-    jsr GetRandom
+    GetRandomNumberInRange(DalekX2Min, DalekX2Max)
     sta c64lib.SPRITE_2_X
-    jsr GetRandom
+    GetRandomNumberInRange(DalekX3Min, DalekX3Max)
     sta c64lib.SPRITE_3_X
 
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    GetRandomNumberInRange(DalekY1Min, DalekY1Max)
     sta c64lib.SPRITE_1_Y
     jsr GetRandom
     sta c64lib.SPRITE_2_Y
@@ -284,27 +284,27 @@ DeterminePosition: {
     cpx #2
     bcc CheckPosition
 
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    GetRandomNumberInRange(DalekX1Min, DalekX1Max)
     sta c64lib.SPRITE_4_X
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    GetRandomNumberInRange(DalekY2Min, DalekY2Max)
     sta c64lib.SPRITE_4_Y
 
 // If level 3 or higher, draw dalek 5
     cpx #3
     bcc CheckPosition
 
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    GetRandomNumberInRange(DalekX2Min, DalekX2Max)
     sta c64lib.SPRITE_5_X
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    GetRandomNumberInRange(DalekY2Min, DalekY2Max)
     sta c64lib.SPRITE_5_Y
 
 // If level 4 or higher, draw dalek 6
     cpx #4
     bcc CheckPosition
 
-    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    GetRandomNumberInRange(DalekX3Min, DalekX3Max)
     sta c64lib.SPRITE_6_X
-    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    GetRandomNumberInRange(DalekY2Min, DalekY2Max)
     sta c64lib.SPRITE_6_Y
 
   CheckPosition:
@@ -316,6 +316,18 @@ DeterminePosition: {
 
   Done:
     rts
+
+  .label DalekX1Min = LIMIT_LEFT;
+  .label DalekX1Max = 90;
+  .label DalekX2Min = 110;
+  .label DalekX2Max = 180;
+  .label DalekX3Min = 180;
+  .label DalekX3Max = LIMIT_RIGHT;
+
+  .label DalekY1Min = LIMIT_UP;
+  .label DalekY1Max = 100;
+  .label DalekY2Min = 190;
+  .label DalekY2Max = LIMIT_DOWN;
 }
 
 // How many dalek are created on this level
