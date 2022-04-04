@@ -163,6 +163,10 @@ LevelInit: {
     sta Player.BombsLeft
     jsr Player.UpdateBombLeftOnUi
 
+    lda #Player.TeleportAvailableAtLevelStart
+    sta Player.TeleportLeft
+    jsr Player.UpdateTeleportLeftOnUi
+
     DalekInit()
 
     lda #SPRITES.DALEK_RIGHT
@@ -259,7 +263,7 @@ UpdateLevelOnUi: {
  
     rts
 
-  .label CurrentLevelOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 8)
+  .label CurrentLevelOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(31, 7)
 }
 
 * = * "Level AddColorToMap"

@@ -212,8 +212,8 @@ CompareAndUpdateHiScore: {
 }
 
 .label ZeroChar = 48;
-.label ScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 11);
-.label HiScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 14);
+.label ScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 10);
+.label HiScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 13);
 
 CurrentScore: .byte 0, 0, 0, 0
 
