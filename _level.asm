@@ -138,8 +138,6 @@ Init: {
     jsr Player.Init
     jsr UpdateLevelOnUi
 
-    jsr ResetScore
-
     jmp AddColorToMap   // jsr + rts
 }
 
@@ -208,6 +206,9 @@ GetSpriteMaskForLevel: {
 * = * "Level StartNewGame"
 StartNewGame: {
     HideDialog(ScreenMemoryBaseAddress)
+
+    jsr CompareAndUpdateHiScore
+    jsr ResetScore
 
     lda #0
     sta GameEnded

@@ -179,8 +179,41 @@ DrawScore: {
   .label ScorePtr = $beef
 }
 
+CompareAndUpdateHiScore: {
+    lda HiScoreLabel
+    cmp ScoreLabel
+    bcc UpdateHiScore1
+    lda HiScoreLabel + 1
+    cmp ScoreLabel + 1
+    bcc UpdateHiScore2
+    lda HiScoreLabel + 2
+    cmp ScoreLabel + 2
+    bcc UpdateHiScore3
+    lda HiScoreLabel + 3
+    cmp ScoreLabel + 3
+    bcc UpdateHiScore4
+    jmp !+
+
+  UpdateHiScore1:
+    lda ScoreLabel
+    sta HiScoreLabel
+  UpdateHiScore2:
+    lda ScoreLabel + 1
+    sta HiScoreLabel + 1
+  UpdateHiScore3:
+    lda ScoreLabel + 2
+    sta HiScoreLabel + 2
+  UpdateHiScore4:
+    lda ScoreLabel + 3
+    sta HiScoreLabel + 3
+
+  !:
+    rts
+}
+
 .label ZeroChar = 48;
 .label ScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 11);
+.label HiScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 14);
 
 CurrentScore: .byte 0, 0, 0, 0
 
