@@ -22,6 +22,10 @@ Init: {
     sta BombsLeft
     jsr UpdateBombLeftOnUi
 
+    lda #TeleportAvailableAtLevelStart
+    sta TeleportLeft
+    jsr UpdateTeleportLeftOnUi
+
     lda #0
     sta BombActive
     sta PlayerDead
@@ -252,6 +256,37 @@ BombExploded: {
     sta c64lib.SPRITE_ENABLE
 
     dec BombActive
+  Done:
+    rts
+}
+
+* = * "Player Teleport"
+Teleport: {
+    lda TeleportLeft
+    beq Done
+
+    IsTKeyPressed()
+    beq Done
+
+  !:
+    IsTKeyPressed()
+    bne !-
+
+    dec TeleportLeft
+
+  Redo:
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_0_X
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_0_Y
+
+    jsr WaitRoutine
+
+    lda c64lib.SPRITE_2S_COLLISION
+    bne Redo
+
+    jsr UpdateTeleportLeftOnUi
+
   Done:
     rts
 }

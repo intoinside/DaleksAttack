@@ -27,6 +27,9 @@ Manager: {
 
     jsr Player.HandlePlayerMove
     jsr Player.BombDropped
+
+    jsr Player.Teleport
+
     HandleDalekMove(%00000010, 1)
     HandleDalekMove(%00000100, 2)
     HandleDalekMove(%00001000, 3)
