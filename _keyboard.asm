@@ -28,27 +28,13 @@
     jsr Keyboard.DetectKeyPressed
 }
 
-/*
-// Set Keyboard.IKeyPressed if I is pressed
-.macro IsIKeyPressed() {
-    lda #%11101111
+.macro IsTKeyPressed() {
+    lda #%11111011
     sta Keyboard.DetectKeyPressed.MaskOnPortA
-    lda #%00000010
+    lda #%01000000
     sta Keyboard.DetectKeyPressed.MaskOnPortB
     jsr Keyboard.DetectKeyPressed
-    sta Keyboard.IKeyPressed
 }
-
-// Set Keyboard.BackArrowPressed if "BACK ARROW" is pressed
-.macro IsBackArrowPressed() {
-    lda #%01111111
-    sta Keyboard.DetectKeyPressed.MaskOnPortA
-    lda #%00000010
-    sta Keyboard.DetectKeyPressed.MaskOnPortB
-    jsr Keyboard.DetectKeyPressed
-    sta Keyboard.BackArrowPressed
-}
-*/
 
 .filenamespace Keyboard
 
