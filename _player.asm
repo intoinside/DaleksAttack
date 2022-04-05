@@ -268,6 +268,8 @@ Teleport: {
     IsTKeyPressed()
     beq Done
 
+    ShowDialogTeleport(ScreenMemoryBaseAddress)
+
   !:
     IsTKeyPressed()
     bne !-
@@ -287,6 +289,7 @@ Teleport: {
 
     jsr UpdateTeleportLeftOnUi
 
+    HideDialog(ScreenMemoryBaseAddress)
   Done:
     rts
 }

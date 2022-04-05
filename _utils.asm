@@ -270,6 +270,18 @@ CurrentScore: .byte 0, 0, 0, 0
     jsr ShowDialog
 }
 
+.macro ShowDialogTeleport(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogTeleport
+    sta ShowDialog.DialogAddress
+    lda #>DialogTeleport
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
 .macro HideDialog(ScreenMemoryBaseAddress) {
     lda #<ScreenMemoryBaseAddress
     sta ShowDialog.StartAddress
