@@ -6,6 +6,9 @@
 //
 // Routine for keyboard managing
 //
+// Matrix table reference:
+// https://images.squarespace-cdn.com/content/v1/511651d6e4b0a31c035e30aa/1369219614957-CZ7FU715PJH28C0S3UXN/dustlayer.com-keyboard-matrix-c64.png
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 #importonce
@@ -28,27 +31,13 @@
     jsr Keyboard.DetectKeyPressed
 }
 
-/*
-// Set Keyboard.IKeyPressed if I is pressed
-.macro IsIKeyPressed() {
-    lda #%11101111
+.macro IsTKeyPressed() {
+    lda #%11111011
     sta Keyboard.DetectKeyPressed.MaskOnPortA
-    lda #%00000010
+    lda #%01000000
     sta Keyboard.DetectKeyPressed.MaskOnPortB
     jsr Keyboard.DetectKeyPressed
-    sta Keyboard.IKeyPressed
 }
-
-// Set Keyboard.BackArrowPressed if "BACK ARROW" is pressed
-.macro IsBackArrowPressed() {
-    lda #%01111111
-    sta Keyboard.DetectKeyPressed.MaskOnPortA
-    lda #%00000010
-    sta Keyboard.DetectKeyPressed.MaskOnPortB
-    jsr Keyboard.DetectKeyPressed
-    sta Keyboard.BackArrowPressed
-}
-*/
 
 .filenamespace Keyboard
 

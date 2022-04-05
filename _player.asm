@@ -22,6 +22,10 @@ Init: {
     sta BombsLeft
     jsr UpdateBombLeftOnUi
 
+    lda #TeleportAvailableAtLevelStart
+    sta TeleportLeft
+    jsr UpdateTeleportLeftOnUi
+
     lda #0
     sta BombActive
     sta PlayerDead
@@ -256,6 +260,40 @@ BombExploded: {
     rts
 }
 
+* = * "Player Teleport"
+Teleport: {
+    lda TeleportLeft
+    beq Done
+
+    IsTKeyPressed()
+    beq Done
+
+    ShowDialogTeleport(ScreenMemoryBaseAddress)
+
+  !:
+    IsTKeyPressed()
+    bne !-
+
+    dec TeleportLeft
+
+  Redo:
+    GetRandomNumberInRange(LIMIT_LEFT, LIMIT_RIGHT)
+    sta c64lib.SPRITE_0_X
+    GetRandomNumberInRange(LIMIT_UP, LIMIT_DOWN)
+    sta c64lib.SPRITE_0_Y
+
+    jsr WaitRoutine
+
+    lda c64lib.SPRITE_2S_COLLISION
+    bne Redo
+
+    jsr UpdateTeleportLeftOnUi
+
+    HideDialog(ScreenMemoryBaseAddress)
+  Done:
+    rts
+}
+
 * = * "Player LifeLost"
 LifeLost: {
     inc PlayerDead
@@ -295,7 +333,7 @@ UpdateLifesLeftOnUi: {
  
     rts
 
-  .label LifesLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 18)
+  .label LifesLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 17)
 }
 
 * = * "Player UpdateBombLeftOnUi"
@@ -307,15 +345,33 @@ UpdateBombLeftOnUi: {
  
     rts
 
-  .label BombsLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 21)
+  .label BombsLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 20)
 }
 
-BombActive: .byte 0
+* = * "Player UpdateTeleportLeftOnUi"
+UpdateTeleportLeftOnUi: {
+    lda TeleportLeft
+    clc
+    adc #48
+    sta TeleportLeftOnUi
+ 
+    rts
+
+  .label TeleportLeftOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 23)
+}
+
+// Count of teleport left
+TeleportLeft: .byte 3
+.label TeleportAvailableAtLevelStart = 3
 
 // Count of bombs left
 BombsLeft: .byte 2
 .label BombsAvailableAtLevelStart = 2
 
+// Active bomb flag
+BombActive: .byte 0
+
+// Count of lifes left
 LifesLeft: .byte 3
 .label LifesAvailableAtLevelStart = 3
 

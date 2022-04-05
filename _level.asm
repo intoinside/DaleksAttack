@@ -27,6 +27,9 @@ Manager: {
 
     jsr Player.HandlePlayerMove
     jsr Player.BombDropped
+
+    jsr Player.Teleport
+
     HandleDalekMove(%00000010, 1)
     HandleDalekMove(%00000100, 2)
     HandleDalekMove(%00001000, 3)
@@ -163,6 +166,10 @@ LevelInit: {
     sta Player.BombsLeft
     jsr Player.UpdateBombLeftOnUi
 
+    lda #Player.TeleportAvailableAtLevelStart
+    sta Player.TeleportLeft
+    jsr Player.UpdateTeleportLeftOnUi
+
     DalekInit()
 
     lda #SPRITES.DALEK_RIGHT
@@ -259,7 +266,7 @@ UpdateLevelOnUi: {
  
     rts
 
-  .label CurrentLevelOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 8)
+  .label CurrentLevelOnUi = ScreenMemoryBaseAddress + c64lib_getTextOffset(31, 7)
 }
 
 * = * "Level AddColorToMap"

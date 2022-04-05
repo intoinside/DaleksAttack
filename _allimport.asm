@@ -24,6 +24,8 @@ DialogGameOver:
   .import binary "./assets/gameover.bin"
 DialogDead:
   .import binary "./assets/dead.bin"
+DialogTeleport:
+  .import binary "./assets/teleport.bin"
 
 .segment MapDummyArea
 * = $5000 "MapDummyArea"

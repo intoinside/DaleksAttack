@@ -92,6 +92,17 @@ preprocess {
                 interleaver {
                 }
             }
+            map {
+                left = 60
+                top = 0
+                right = 70
+                bottom = 12
+                interleaver {
+                    output = file("assets/teleport.bin")
+                }
+                interleaver {
+                }
+            }
         }
     }
 }

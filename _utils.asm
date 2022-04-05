@@ -212,8 +212,8 @@ CompareAndUpdateHiScore: {
 }
 
 .label ZeroChar = 48;
-.label ScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 11);
-.label HiScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 14);
+.label ScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 10);
+.label HiScoreLabel = ScreenMemoryBaseAddress + c64lib_getTextOffset(30, 13);
 
 CurrentScore: .byte 0, 0, 0, 0
 
@@ -266,6 +266,18 @@ CurrentScore: .byte 0, 0, 0, 0
     lda #<DialogDead
     sta ShowDialog.DialogAddress
     lda #>DialogDead
+    sta ShowDialog.DialogAddress + 1
+    jsr ShowDialog
+}
+
+.macro ShowDialogTeleport(ScreenMemoryBaseAddress) {
+    lda #<ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress
+    lda #>ScreenMemoryBaseAddress
+    sta ShowDialog.StartAddress + 1
+    lda #<DialogTeleport
+    sta ShowDialog.DialogAddress
+    lda #>DialogTeleport
     sta ShowDialog.DialogAddress + 1
     jsr ShowDialog
 }
