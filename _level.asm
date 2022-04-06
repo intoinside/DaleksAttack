@@ -101,8 +101,6 @@ Init: {
     sta c64lib.MEMORY_CONTROL   
 
 // Player sprite setting
-    lda #$0a
-    sta c64lib.SPRITE_0_COLOR
     lda #SPRITES.PLAYER_DOWN
     sta SPRITE_0
 
@@ -180,6 +178,8 @@ LevelInit: {
     sta SPRITE_5
     sta SPRITE_6
 
+    lda #LIGHT_RED
+    sta c64lib.SPRITE_0_COLOR
     lda #0
     sta LevelCompleted
 

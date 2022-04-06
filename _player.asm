@@ -298,6 +298,11 @@ Teleport: {
 LifeLost: {
     inc PlayerDead
 
+    lda #GRAY
+    sta c64lib.SPRITE_0_COLOR
+    lda #SPRITES.PLAYER_DEAD
+    sta SPRITE_0
+
     dec LifesLeft
     beq IsDead
 
