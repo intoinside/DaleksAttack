@@ -211,6 +211,9 @@ AnimateExploding: {
     lda #SPRITES.DalekDebris
     sta FirstSpritePointer, x
 
+    lda #GRAY
+    sta c64lib.SPRITE_0_COLOR, x
+
 // Check if all dalek are exploded
     lda ExplodedCount
     cmp DalekCount

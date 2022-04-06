@@ -106,12 +106,6 @@ Init: {
 
 // Dalek sprite setting
     lda #YELLOW
-    sta c64lib.SPRITE_1_COLOR
-    sta c64lib.SPRITE_2_COLOR
-    sta c64lib.SPRITE_3_COLOR
-    sta c64lib.SPRITE_4_COLOR
-    sta c64lib.SPRITE_5_COLOR
-    sta c64lib.SPRITE_6_COLOR
     sta c64lib.SPRITE_7_COLOR
 
 // Bomb sprite
@@ -180,6 +174,15 @@ LevelInit: {
 
     lda #LIGHT_RED
     sta c64lib.SPRITE_0_COLOR
+
+    lda #YELLOW
+    sta c64lib.SPRITE_1_COLOR
+    sta c64lib.SPRITE_2_COLOR
+    sta c64lib.SPRITE_3_COLOR
+    sta c64lib.SPRITE_4_COLOR
+    sta c64lib.SPRITE_5_COLOR
+    sta c64lib.SPRITE_6_COLOR
+
     lda #0
     sta LevelCompleted
 
