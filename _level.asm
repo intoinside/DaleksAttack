@@ -136,23 +136,42 @@ Init: {
     jmp AddColorToMap   // jsr + rts
 }
 
+SetSpeed: {
+// Up to level 4, speed is always #DalekSpeedUpToLevel4
+    lda CurrentLevel
+    cmp #5
+    bcc MinSpeed
+
+// Over level 10, speed is always #DalekMaxSpeed
+    cmp #10
+    bcs MaxSpeed
+
+// In any other case, is related to current level
+    lda #(DalekSpeedUpToLevel4 + 4)
+    sec
+    sbc CurrentLevel
+    jmp Save
+
+  MinSpeed:
+    lda #DalekSpeedUpToLevel4
+    jmp Save
+
+  MaxSpeed:
+    lda #DalekMaxSpeed
+
+  Save:
+    sta Dalek.HandleDalekMove.DalekSpeed
+
+    rts
+}
+
 * = * "Level LevelInit"
 LevelInit: {
     jsr GetSpriteMaskForLevel
     sta c64lib.SPRITE_ENABLE
 
-    lda #DalekSpeedUpToLevel4
-    sta Dalek.HandleDalekMove.DalekSpeed
-
-    lda CurrentLevel
-    cmp #5
-    bcc !+
-
-    lda #DalekSpeedUpToLevel4
-    clc
-    adc #4
-    sbc CurrentLevel
-    sta Dalek.HandleDalekMove.DalekSpeed
+    jsr SetSpeed
+    
   !:
     lda #Player.BombsAvailableAtLevelStart
     sta Player.BombsLeft
@@ -295,7 +314,6 @@ TimedRoutine: {
     sta DelayCounter
 
   Waiting:
-    // jsr AddEnemy
 
     jmp Exit
 
@@ -332,7 +350,11 @@ CurrentLevel: .byte 1
 // Detect if level has been completed
 LevelCompleted: .byte 0
 
+// Dalek speed up to level 4
 .label DalekSpeedUpToLevel4 = 8
+
+// Maximum dalek speed reaching higher level
+.label DalekMaxSpeed = 3
 
 #import "_utils.asm"
 #import "_joystick.asm"
