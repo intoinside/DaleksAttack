@@ -281,10 +281,27 @@ StartNewLife: {
 
 * = * "Level UpdateLifesLeftOnUi"
 UpdateLevelOnUi: {
+    ldx #0
     lda CurrentLevel
+
+// Get tenth
+  Loop:
+    cmp #10
+    bcc !+
+
+    sec
+    sbc #10
+    inx
+    jmp Loop
+
+  !:
     clc
     adc #48
     sta CurrentLevelOnUi
+
+    txa
+    adc #48
+    sta CurrentLevelOnUi - 1
  
     rts
 
