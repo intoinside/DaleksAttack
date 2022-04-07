@@ -26,15 +26,18 @@
 
 // Update requested Dalek movement, getting toward player
 .macro HandleDalekMove(dalekBitMask, dalekIndex) {
+// No move if player is dead
     lda Player.PlayerDead
     bne !+
 
+// Check if dalek exists (related to current level)
     ldx Level.CurrentLevel
     inx
     inx
     cpx #dalekIndex 
     bcc !+
 
+// Setup vars and indexes before move
     lda #dalekIndex
     sta Dalek.HandleDalekMove.DalekIndex
     asl
@@ -74,8 +77,8 @@ HandleDalekMove: {
 // Check if current dalek is dead (and exploded)
     lda DalekToMoveBitMask
     and DeadBitmask
-// If is dead, exit
-    bne DoneFar
+// If is dead, go to collision check
+    bne CheckCollision
 
 // Check if current dalek is exploding
     lda DalekToMoveBitMask
@@ -103,6 +106,12 @@ HandleDalekMove: {
 
 // Collision dalek-player, game end and exit
     bne EndGame
+
+// Check another time if current dalek is exploding
+    lda DalekToMoveBitMask
+    and DeadBitmask
+// If is dead, exit
+    bne Done
 
 // Check collision between current dalek and other daleks
   CheckCollisionWithOtherDalek:
