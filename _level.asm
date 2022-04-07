@@ -89,7 +89,7 @@ Init: {
     sta c64lib.BG_COL_2
 
 // Setting sprite multi-color
-    lda #LIGHT_RED
+    lda #RED
     sta c64lib.SPRITE_COL_0
 
     lda #BLACK
