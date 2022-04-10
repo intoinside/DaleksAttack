@@ -314,10 +314,8 @@ LifeLost: {
     ShowDialogGameOver(ScreenMemoryBaseAddress)
 
   !:
-    IsReturnPressed()
-    beq !-
-
     jsr UpdateLifesLeftOnUi
+    IsReturnPressedAndReleased()
 
     rts
 }

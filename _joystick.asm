@@ -24,12 +24,12 @@ Orientation:  .byte $01         // $01 - right, $ff - left
 
 * = * "Joystick GetJoystickMove"
 GetJoystickMove: {
+    lda #0
+    sta $dc02
+
     ldx #$00
     lda $dc00
-    /*
-    ldy GameEnded
-    bne CheckOnlyFirePress
-    */
+
     lsr
     bcs !NoUp+
     ldx #$ff

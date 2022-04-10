@@ -56,7 +56,7 @@ Manager: {
     beq CheckPlayerDead
 
     jsr StartNewGame
-    jmp StartLevel
+    jmp BackToMain
 
   CheckPlayerDead:
     lda Player.PlayerDead
@@ -68,10 +68,7 @@ Manager: {
   GameInProgress:
     jmp JoystickMovement
 
-// Game ended, handle it better!
-  !:
-    jmp !-
-
+  BackToMain:
     rts
 }
 

@@ -23,6 +23,15 @@
     sta Keyboard.ReturnPressed
 }
 
+.macro IsReturnPressedAndReleased() {
+  !:
+    IsReturnPressed()
+    beq !-
+  !:
+    IsReturnPressed()
+    bne !-
+}
+
 .macro IsBKeyPressed() {
     lda #%11110111
     sta Keyboard.DetectKeyPressed.MaskOnPortA
