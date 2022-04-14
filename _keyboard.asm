@@ -28,7 +28,7 @@
     IsReturnPressed()
     beq !-
   !:
-    IsReturnPressed()
+    jsr Keyboard.DetectKeyPressed
     bne !-
 }
 
