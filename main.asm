@@ -38,11 +38,8 @@
 * = $1500 "Entry"
 Entry: {
     MainGameSettings()
-    jmp GamePlay
-}
 
-* = * "Main GamePlay"
-GamePlay: {
+  GamePlay:
     ldx #0
     lda #music.startSong - 1
     jsr music.init
@@ -53,22 +50,16 @@ GamePlay: {
 
 // Show intro screen until player start a new game
     ShowIntro()
-  !:
-    IsReturnPressed()
-    beq !-
-  
+    IsReturnPressedAndReleased()
     dec MusicActive
 
     StopSounds()
 
     PrepareGame()
     
-// Init a new game
+// Init game
     jsr Level.Manager
     jmp GamePlay
-
-  !:
-    jmp !-
 }
 
 .macro ShowIntro() {
