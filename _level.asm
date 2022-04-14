@@ -134,8 +134,8 @@ SetSpeed: {
     cmp #5
     bcc MinSpeed
 
-// Over level 10, speed is always #DalekMaxSpeed
-    cmp #10
+// Over level 9, speed is always #DalekMaxSpeed
+    cmp #9
     bcs MaxSpeed
 
 // In any other case, is related to current level
@@ -196,6 +196,7 @@ LevelInit: {
 
     lda #0
     sta LevelCompleted
+    sta Dalek.SpriteCollisionBuffer
 
 // Player position (always in the middle)
     lda #127
@@ -354,10 +355,10 @@ CurrentLevel: .byte 1
 LevelCompleted: .byte 0
 
 // Dalek speed up to level 4
-.label DalekSpeedUpToLevel4 = 8
+.label DalekSpeedUpToLevel4 = 6
 
 // Maximum dalek speed reaching higher level
-.label DalekMaxSpeed = 3
+.label DalekMaxSpeed = 2
 
 #import "_utils.asm"
 #import "_joystick.asm"

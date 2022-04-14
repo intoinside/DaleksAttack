@@ -357,7 +357,6 @@ ExplodingBitmask:   .byte 0
 // Sprite collision saver at the end of every loop
 SpriteCollisionBuffer: .byte 0
 
-//#import "_level.asm"
 #import "_sounds.asm"
 #import "_utils.asm"
 #import "_label.asm"
