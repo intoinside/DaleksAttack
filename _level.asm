@@ -252,10 +252,6 @@ StartNewGame: {
 SetupNextLevel: {
     HideDialog(ScreenMemoryBaseAddress)
 
-    lda CurrentLevel
-    cmp #MaxLevel
-    bcs !+
-
     inc CurrentLevel
     jsr UpdateLevelOnUi
   !:
@@ -350,8 +346,6 @@ TimedRoutine10th: {
   DelayCounter: .byte 8       // Counter storage
   DelayRequested: .byte 8     // 8/50 second delay
 }
-
-.label MaxLevel = 12
 
 // Hold current level
 CurrentLevel: .byte 1
