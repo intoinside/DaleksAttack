@@ -368,7 +368,7 @@ ShowDialog: {
 * = * "Utils GetRandom"
 GetRandom: {
   Loop:
-    lda $d012
+    lda c64lib.RASTER
     eor $dc04
     sbc $dc05
     cmp GeneratorMax
@@ -383,10 +383,10 @@ GetRandom: {
 
 WaitRoutine: {
   VBLANKWAITLOW:
-    lda $d011
+    lda c64lib.CONTROL_1
     bpl VBLANKWAITLOW
   VBLANKWAITHIGH:
-    lda $d011
+    lda c64lib.CONTROL_1
     bmi VBLANKWAITHIGH
     rts
 }

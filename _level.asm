@@ -92,11 +92,6 @@ Init: {
     lda #BLACK
     sta c64lib.SPRITE_COL_1
 
-// Set pointer to char memory to $7800-$7fff (xxxx111x)
-// and pointer to screen memory to $4400-$47ff (0001xxxx)
-    lda #%00011110
-    sta c64lib.MEMORY_CONTROL   
-
 // Player sprite setting
     lda #SPRITES.PLAYER_DOWN
     sta SPRITE_0

@@ -18,8 +18,6 @@ Music:
   .fill music.size, music.getData(i)
 
 .segment MapData
-* = $4000 "IntroMap"
-  .import binary "./assets/mainmap.bin"
 * = $4400 "MainMap"
   .import binary "./assets/mainmap.bin"
 * = $4800 "Dialogs"
@@ -35,8 +33,16 @@ DialogTeleport:
   .import binary "./assets/teleport.bin"
 
 .segment MapDummyArea
-* = $5000 "MapDummyArea"
+* = $4b00 "MapDummyArea"
 MapDummyArea:
+
+.segment Intro
+.const KOALA_TEMPLATE = "C64FILE, Bitmap=$0000, ScreenRam=$1f40, ColorRam=$2328, BackgroundColor = $2710"
+.var picture = LoadBinary("intro.kla", KOALA_TEMPLATE)
+IntroMap:
+* = $4000 "IntroMap"; .fill picture.getScreenRamSize(), picture.getScreenRam(i)
+IntroBitmap:
+* = $6000 "IntroBitmap"; .fill picture.getBitmapSize(), picture.getBitmap(i)
 
 .segment Sprites
   .import binary "./assets/sprites.bin"
@@ -72,3 +78,10 @@ CharColors:
 .print "speed="+toBinaryString(music.speed)
 .print "startpage="+music.startpage
 .print "pagelength="+music.pagelength
+.print ""
+
+.print ""
+.print "INTRO Data"
+.print "--------"
+.print "getBitmapSize=$"+toHexString(picture.getBitmapSize())
+.print ""

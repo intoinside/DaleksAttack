@@ -42,31 +42,31 @@ KEYB: {
 
 SPRITES: {
 // Dalek
-  .label DALEK_RIGHT        = $50
-  .label DALEK_LEFT         = $51
-  .label DALEK_UP           = $52
-  .label DALEK_DOWN         = $53
+  .label DALEK_RIGHT        = $40
+  .label DALEK_LEFT         = $41
+  .label DALEK_UP           = $42
+  .label DALEK_DOWN         = $43
 
 // Player
-  .label PLAYER_DOWN        = $54
-  .label PLAYER_DOWN_1      = $55
-  .label PLAYER_RIGHT       = $56
-  .label PLAYER_RIGHT_1     = $57
-  .label PLAYER_LEFT        = $58
-  .label PLAYER_LEFT_1      = $59
-  .label PLAYER_UP          = $5a
-  .label PLAYER_UP_1        = $5b
-  .label PLAYER_DEAD        = $5c
+  .label PLAYER_DOWN        = $44
+  .label PLAYER_DOWN_1      = $45
+  .label PLAYER_RIGHT       = $46
+  .label PLAYER_RIGHT_1     = $47
+  .label PLAYER_LEFT        = $48
+  .label PLAYER_LEFT_1      = $49
+  .label PLAYER_UP          = $4a
+  .label PLAYER_UP_1        = $4b
+  .label PLAYER_DEAD        = $4c
 
 // Explosions
-  .label DalekExplosion1    = $5d
-  .label DalekExplosion2    = $5e
-  .label DalekExplosion3    = $5f
-  .label DalekExplosion4    = $60
-  .label DalekExplosion5    = $61
-  .label DalekDebris        = $62
+  .label DalekExplosion1    = $4d
+  .label DalekExplosion2    = $4e
+  .label DalekExplosion3    = $4f
+  .label DalekExplosion4    = $50
+  .label DalekExplosion5    = $51
+  .label DalekDebris        = $52
 
 // Bombs
-  .label BombFrame1         = $63
-  .label BombFrame2         = $64
+  .label BombFrame1         = $53
+  .label BombFrame2         = $54
 }

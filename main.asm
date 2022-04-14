@@ -11,24 +11,25 @@
 #importonce
 
 .segmentdef Music [start=$1000]
-.segmentdef Code //[start=$0810]
+.segmentdef Intro
+.segmentdef Code
 .segmentdef MapData [start=$4000]
-.segmentdef MapDummyArea [start=$5000]
-.segmentdef Sprites [start=$5400]
-.segmentdef Charsets [start=$7800]
+.segmentdef MapDummyArea [start=$4c00]
+.segmentdef Sprites [start=$5000]
+.segmentdef Charsets [start=$5800]
 .segmentdef CharsetsColors [start=$c000]
 
 #import "_allimport.asm"
 
-.file [name="./main.prg", segments="Code, Music, Charsets, CharsetsColors, MapData, Sprites", modify="BasicUpstart", _start=$1500]
-.file [name="./DaleksAttack.prg", segments="Code, Music, Charsets, CharsetsColors, MapData, Sprites", modify="BasicUpstart", _start=$1500]
+.file [name="./main.prg", segments="Music, Code, Intro, Charsets, CharsetsColors, MapData, Sprites", modify="BasicUpstart", _start=$1500]
+.file [name="./DaleksAttack.prg", segments="Music, Code, Intro, Charsets, CharsetsColors, MapData, Sprites", modify="BasicUpstart", _start=$1500]
 .disk [filename="./DaleksAttack.d64", name="DALEKSATTACK", id="C2022", showInfo]
 {
   [name="----------------", type="rel"],
   [name="--- RAFFAELE ---", type="rel"],
   [name="--- INTORCIA ---", type="rel"],
   [name="----------------", type="rel"],
-  [name="DALEKSATTACK", type="prg", segments="Code, Music, Charsets, CharsetsColors, MapData, Sprites", modify="BasicUpstart", _start=$1500],
+  [name="DALEKSATTACK", type="prg", segments="Music, Code, Intro, Charsets, CharsetsColors, MapData, Sprites", modify="BasicUpstart", _start=$1500],
   [name="----------------", type="rel"]
 }
 
@@ -42,9 +43,6 @@ Entry: {
 
 * = * "Main GamePlay"
 GamePlay: {
-// Show intro screen until player start a new game
-//    jsr Intro.Manager
-
     ldx #0
     lda #music.startSong - 1
     jsr music.init
@@ -52,6 +50,9 @@ GamePlay: {
     SetupInterrupt()
 
     inc MusicActive
+
+// Show intro screen until player start a new game
+    ShowIntro()
   !:
     IsReturnPressed()
     beq !-
@@ -59,6 +60,8 @@ GamePlay: {
     dec MusicActive
 
     StopSounds()
+
+    PrepareGame()
     
 // Init a new game
     jsr Level.Manager
@@ -68,25 +71,60 @@ GamePlay: {
     jmp !-
 }
 
+.macro ShowIntro() {
+    lda #0
+    sta c64lib.SPRITE_ENABLE
+
+    lda #%00001000  // Bitmap mem $2000, Screen mem $0000 (+VIC $4000)
+    sta c64lib.MEMORY_CONTROL
+    lda #%11011000  // 40 cols, multicolor mode
+    sta c64lib.CONTROL_2
+    lda #%00111011  // 25 rows, screen on, bitmap mode
+    sta c64lib.CONTROL_1
+
+    ldx #0
+    lda #15
+  !Loop:
+    .for (var i=0; i<4; i++) {
+      sta $d800 + i * $100, x
+    }
+    inx
+    bne !Loop-
+
+    lda #picture.getBackgroundColor()
+    sta $d020
+    sta $d021
+}
+
 .macro SetupInterrupt() {
     sei
     lda #<IrqForMusic
     sta $0314
     lda #>IrqForMusic
     sta $0315
-    asl $d019
+    asl c64lib.IRR
     lda #$7b
     sta $dc0d
     lda #$81
-    sta $d01a
-    lda #$1b
-    sta $d011
+    sta c64lib.IMR
+    lda #%00011011
+    sta c64lib.CONTROL_1
     lda #$ff
-    sta $d012
+    sta c64lib.RASTER
+}
+
+.macro PrepareGame() {
+// Set pointer to char memory to $5800-$5fff (xxxx011x)
+// and pointer to screen memory to $4400-$47ff (0001xxxx)
+    lda #%00010110
+    sta c64lib.MEMORY_CONTROL   
+
+    lda #%00011011  // 25 rows, screen on, bitmap mode off
+    sta c64lib.CONTROL_1
 }
 
 IrqForMusic: {
-    asl $d019
+    asl c64lib.IRR
     inc $d020
     lda MusicActive
     beq !+
@@ -106,16 +144,12 @@ IrqForMusic: {
 // Switch out Basic so there is available ram on $a000-$bfff
     lda $01
     ora #%00000010
-    and #%11111110
+    and #%11111110  // %xxxxxx10 - Ram $a000-$bfff, Kernal $e000-$ffff
     sta $01
 
 // Set Vic bank 1 ($4000-$7fff)
     lda #%00000010
     sta CIA2.PORT_A
-
-// Set Multicolor mode on
-    lda #%00011000
-    sta c64lib.CONTROL_2
 
     lda #$ff
     sta c64lib.SPRITE_COL_MODE
