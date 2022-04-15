@@ -39,10 +39,12 @@ MapDummyArea:
 .segment Intro
 .const KOALA_TEMPLATE = "C64FILE, Bitmap=$0000, ScreenRam=$1f40, ColorRam=$2328, BackgroundColor = $2710"
 .var picture = LoadBinary("intro.kla", KOALA_TEMPLATE)
-IntroMap:
-* = $4000 "IntroMap"; .fill picture.getScreenRamSize(), picture.getScreenRam(i)
-IntroBitmap:
-* = $6000 "IntroBitmap"; .fill picture.getBitmapSize(), picture.getBitmap(i)
+* = $4000 "IntroMap";
+IntroMap: .fill picture.getScreenRamSize(), picture.getScreenRam(i)
+* = $6000 "IntroBitmap";
+IntroBitmap:  .fill picture.getBitmapSize(), picture.getBitmap(i)
+* = $8000 "IntroColorRam";
+IntroColorRam:   .fill picture.getColorRamSize(), picture.getColorRam(i)
 
 .segment Sprites
   .import binary "./assets/sprites.bin"
@@ -55,6 +57,7 @@ Charset:
 CharColors:
   .import binary "./assets/charcolors.bin"
 
+.print ""
 // Print the music info while assembling
 .print ""
 .print "SID Data"

@@ -75,9 +75,9 @@ Entry: {
     sta c64lib.CONTROL_1
 
     ldx #0
-    lda #15
   !Loop:
     .for (var i=0; i<4; i++) {
+      lda IntroColorRam + i * $100, x
       sta $d800 + i * $100, x
     }
     inx
