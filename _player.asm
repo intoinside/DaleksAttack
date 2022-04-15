@@ -91,6 +91,8 @@ FrameToRight: {
     jsr CanSwitchFrame
     bcs Done
 
+    jsr Sounds.Walkstep
+
     lda SPRITE_0
     cmp #SPRITES.PLAYER_RIGHT
     beq Switch
@@ -110,6 +112,8 @@ FrameToRight: {
 FrameToLeft: {
     jsr CanSwitchFrame
     bcs Done
+
+    jsr Sounds.Walkstep
 
     lda SPRITE_0
     cmp #SPRITES.PLAYER_LEFT
@@ -134,6 +138,8 @@ FrameToUp: {
     jsr CanSwitchFrame
     bcs Done
 
+    jsr Sounds.Walkstep
+
     lda SPRITE_0
     cmp #SPRITES.PLAYER_UP
     beq Switch
@@ -156,6 +162,8 @@ FrameToDown: {
 
     jsr CanSwitchFrame
     bcs Done
+
+    jsr Sounds.Walkstep
 
     lda SPRITE_0
     cmp #SPRITES.PLAYER_DOWN

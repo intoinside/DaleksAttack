@@ -38,6 +38,25 @@ Explosion: {
     rts
 }
 
+Walkstep: {
+    lda #%00011010
+    sta SID.VOLUME_FILTER_MODES
+    lda #%00000000        
+    sta SID.VOICE2_FREQ_1
+    lda #%00000010        
+    sta SID.VOICE2_FREQ_2
+    lda #%00000010        
+    sta SID.VOICE2_ATTACK_DECAY
+    lda #%00000010
+    sta SID.VOICE2_SUSTAIN_RELEASE
+    lda #%00000000        
+    sta SID.VOICE2_CTRL
+    lda #%10000001
+    sta SID.VOICE2_CTRL
+
+    rts
+}
+
 SID: {
 	.label VOICE1_FREQ_1		= $d400
 	.label VOICE1_FREQ_2		= $d401
