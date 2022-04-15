@@ -14,7 +14,6 @@
 .segmentdef Intro
 .segmentdef Code
 .segmentdef MapData [start=$4000]
-.segmentdef MapDummyArea [start=$4c00]
 .segmentdef Sprites [start=$5000]
 .segmentdef Charsets [start=$5800]
 .segmentdef CharsetsColors [start=$c000]
