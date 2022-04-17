@@ -75,9 +75,8 @@ Manager: {
 * = * "Level Init"
 Init: {
 // Set background and border color to brown
-    lda #GRAY
+    lda #DARK_GRAY
     sta c64lib.BG_COL_0
-    lda #LIGHT_GRAY
     sta c64lib.BORDER_COL
 
     lda #BLACK

@@ -40,6 +40,8 @@ Entry: {
     MainGameSettings()
 
   GamePlay:
+    ShowInstruction()
+
     ldx #0
     lda #music.startSong - 1
     jsr music.init
@@ -60,6 +62,22 @@ Entry: {
 // Init game
     jsr Level.Manager
     jmp GamePlay
+}
+
+.macro ShowInstruction() {
+    lda #%00101000  // Char mem $2000, Screen mem $0000 (+VIC $4000)
+    sta c64lib.MEMORY_CONTROL
+
+// Set pointer to char memory to $5800-$5fff (xxxx011x)
+// and pointer to screen memory to $4c00-$4fff (0011xxxx)
+    lda #%00110110
+    sta c64lib.MEMORY_CONTROL   
+
+    ClearScreen(ScreenMemoryBaseAddress + IntroScreenRamOffset)
+
+    IsReturnPressedAndReleased()
+
+
 }
 
 .macro ShowIntro() {
@@ -156,6 +174,7 @@ MusicActive: .byte 0
 #import "_label.asm"
 #import "_level.asm"
 #import "_sounds.asm"
+#import "_intro.asm"
 
 #import "common/lib/math-global.asm"
 #import "chipset/lib/vic2.asm"

@@ -357,6 +357,18 @@ ShowDialog: {
   StartAddressHi: .byte $be
 }
 
+.macro ClearScreen(screenram) {
+    lda #32
+    ldx #250
+  !:
+    dex
+    sta screenram, x
+    sta screenram + 250, x
+    sta screenram + 500, x
+    sta screenram + 750, x
+    bne !-
+}
+
 .macro GetRandomNumberInRange(minNumber, maxNumber) {
     lda #minNumber
     sta GetRandom.GeneratorMin
