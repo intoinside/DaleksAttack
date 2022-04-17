@@ -331,14 +331,14 @@ DeterminePosition: {
 
   .label DalekX1Min = LIMIT_LEFT;
   .label DalekX1Max = 90;
-  .label DalekX2Min = 110;
-  .label DalekX2Max = 180;
-  .label DalekX3Min = 180;
+  .label DalekX2Min = 90;
+  .label DalekX2Max = 160;
+  .label DalekX3Min = 160;
   .label DalekX3Max = LIMIT_RIGHT;
 
   .label DalekY1Min = LIMIT_UP;
-  .label DalekY1Max = 100;
-  .label DalekY2Min = 190;
+  .label DalekY1Max = 110;
+  .label DalekY2Min = 160;
   .label DalekY2Max = LIMIT_DOWN;
 }
 
