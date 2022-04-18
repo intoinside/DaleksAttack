@@ -49,6 +49,17 @@ preprocess {
                 }
             }
             map {
+                left = 70
+                top = 0
+                right = 110
+                bottom = 25
+                interleaver {
+                    output = file("assets/intro.bin")
+                }
+                interleaver {
+                }
+            }
+            map {
                 left = 40
                 top = 0
                 right = 50

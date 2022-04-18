@@ -39,9 +39,9 @@
 Entry: {
     MainGameSettings()
 
-  GamePlay:
     ShowInstruction()
 
+  GamePlay:
     ldx #0
     lda #music.startSong - 1
     jsr music.init
@@ -73,11 +73,7 @@ Entry: {
     lda #%00110110
     sta c64lib.MEMORY_CONTROL   
 
-    ClearScreen(ScreenMemoryBaseAddress + IntroScreenRamOffset)
-
     IsReturnPressedAndReleased()
-
-
 }
 
 .macro ShowIntro() {

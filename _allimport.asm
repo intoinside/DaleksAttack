@@ -20,6 +20,8 @@ Music:
 .segment MapData
 * = $4400 "MainMap"
   .import binary "./assets/mainmap.bin"
+* = $4c00 "MainMap"
+  .import binary "./assets/intro.bin"
 * = $4800 "Dialogs"
 DialogEmpty:
   .import binary "./assets/dialogempty.bin"
