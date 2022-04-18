@@ -130,12 +130,12 @@ Entry: {
 
 IrqForMusic: {
     asl c64lib.IRR
-    inc $d020
+    // inc $d020
     lda MusicActive
     beq !+
     jsr music.play 
   !:
-    dec $d020
+    // dec $d020
     pla
     tay
     pla
