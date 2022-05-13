@@ -36,7 +36,7 @@ DialogTeleport:
 
 .segment Intro
 .const KOALA_TEMPLATE = "C64FILE, Bitmap=$0000, ScreenRam=$1f40, ColorRam=$2328, BackgroundColor = $2710"
-.var picture = LoadBinary("intro.kla", KOALA_TEMPLATE)
+.var picture = LoadBinary("./assets/intro.kla", KOALA_TEMPLATE)
 * = $4000 "IntroMap";
 IntroMap: .fill picture.getScreenRamSize(), picture.getScreenRam(i)
 * = $6000 "IntroBitmap";
