@@ -270,6 +270,7 @@ BombExploded: {
 
 * = * "Player Teleport"
 Teleport: {
+    rts
     lda TeleportLeft
     beq Done
 
